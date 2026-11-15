@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>זה או זה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+<style>
+/* Layout: משחק צבעוני: שתי תיבות בחירה גדולות (ורוד־אדום מול כחול), מד אחוזים, ופאנל עריכה מהיר. כרטיס דילמה גדול עם שתי תיבות בחירה ומד אחוזים, ומתחתיו פאנל עריכה מהיר */
+:root{
+  --bg:#fff7ec; --bg-2:#ffe9f1; --paper:#ffffff; --paper-2:#f3eefc;
+  --ink:#1e1b3a; --ink-soft:#4f4a72; --ink-faint:#8a85a8;
+  --rule:rgba(30,27,58,.12); --rule-strong:rgba(30,27,58,.26);
+  --a:#ff4d6d; --a-soft:#ffe3e9; --b:#2f7cf6; --b-soft:#e2edff;
+  --pop:#ffc233; --pop-soft:#fff1c9; --primary:#7b3ff2; --primary-2:#a855f7; --on-primary:#ffffff;
+  --danger:#e5383b; --danger-soft:rgba(229,56,59,.1);
+  --shadow:rgba(60,30,120,.22); --shadow-soft:rgba(60,30,120,.10);
+  --focus:#7b3ff2; color-scheme:light;
+  --display:"Varela Round","Heebo","Segoe UI",Arial,sans-serif;
+  --body:"Heebo","Segoe UI",Arial,sans-serif;
+  --mono:"Varela Round","Heebo","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14112b; --bg-2:#221437; --paper:#1f1b3d; --paper-2:#2a2550;
+  --ink:#f5f2ff; --ink-soft:#c9c3ea; --ink-faint:#8f88b8;
+  --rule:rgba(245,242,255,.12); --rule-strong:rgba(245,242,255,.26);
+  --a:#ff6b86; --a-soft:#3d1f35; --b:#5b9bff; --b-soft:#1c2a52;
+  --pop:#ffcf5c; --pop-soft:#3a3020; --primary:#9b6bff; --primary-2:#c084fc; --on-primary:#14112b;
+  --danger:#ff6b6b; --danger-soft:rgba(255,107,107,.14);
+  --shadow:rgba(0,0,0,.5); --shadow-soft:rgba(0,0,0,.3);
+  --focus:#c084fc; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#14112b; --bg-2:#221437; --paper:#1f1b3d; --paper-2:#2a2550;
+  --ink:#f5f2ff; --ink-soft:#c9c3ea; --ink-faint:#8f88b8;
+  --rule:rgba(245,242,255,.12); --rule-strong:rgba(245,242,255,.26);
+  --a:#ff6b86; --a-soft:#3d1f35; --b:#5b9bff; --b-soft:#1c2a52;
+  --pop:#ffcf5c; --pop-soft:#3a3020; --primary:#9b6bff; --primary-2:#c084fc; --on-primary:#14112b;
+  --danger:#ff6b6b; --danger-soft:rgba(255,107,107,.14);
+  --shadow:rgba(0,0,0,.5); --shadow-soft:rgba(0,0,0,.3);
+  --focus:#c084fc; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:radial-gradient(1200px 600px at 100% -10%,var(--bg-2),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--b-soft),transparent 60%),var(--bg);background-attachment:fixed;min-height:100vh;color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;direction:rtl;overflow-x:hidden}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:24px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.02em}
+.eyebrow::before,.eyebrow::after{content:"";width:22px;height:2px;border-radius:2px;background:var(--primary);opacity:.6}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(32px,5vw,48px);line-height:1.1;margin:2px 0 0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--a)} h1 em.b{color:var(--b)}
+.topic{font-size:.55em;font-weight:700;color:var(--ink-soft)}
+.sub{margin:6px 0 0;color:var(--ink-soft)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+.seg{display:inline-flex;background:var(--paper);border:1px solid var(--rule-strong);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:inherit;font-size:15px;font-weight:600;color:var(--ink-soft);background:transparent;border:0;border-radius:999px;padding:5px 13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+
+.ghost{font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:transparent;border:1px solid var(--rule-strong);border-radius:999px;padding:6px 15px;cursor:pointer}
+.ghost:hover:not(:disabled){background:var(--paper-2)}
+.ghost:disabled{opacity:.4;cursor:default}
+.cta{font:inherit;font-weight:700;font-size:17px;color:var(--on-primary);background:linear-gradient(135deg,var(--primary),var(--primary-2));border:0;border-radius:999px;padding:12px 28px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 0 rgba(60,20,140,.35),0 8px 18px var(--shadow-soft);transition:transform .12s,box-shadow .12s}
+.cta:hover{transform:translateY(-1px)} .cta:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(60,20,140,.35)}
+
+/* ---- כרטיס הדילמה ---- */
+.stage{background:var(--paper);border:1px solid var(--rule);border-radius:24px;box-shadow:0 10px 30px var(--shadow-soft);padding:clamp(14px,3vw,28px)}
+.card{display:grid;gap:18px}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;color:var(--ink-faint);font-family:var(--mono);font-weight:500;font-size:14px}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots span{width:9px;height:9px;border-radius:50%;background:var(--rule-strong)}
+.dots span.done{background:var(--a)}
+.dots span.now{background:var(--primary);transform:scale(1.3)}
+.ask{font-family:var(--display);font-weight:700;font-size:clamp(22px,3.4vw,32px);text-align:center;margin:0;color:var(--ink)}
+
+.dilemma{transition:opacity .26s ease,transform .26s ease}
+.dilemma.out{opacity:0}
+.dilemma.pre{opacity:0;transition:none}
+.choices{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:stretch}
+.side{display:grid;gap:10px;grid-template-rows:1fr auto;min-width:0}
+.choice{position:relative;font:inherit;color:var(--ink);border-radius:22px;border:3px solid;padding:22px 14px;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;cursor:pointer;transition:transform .12s ease,box-shadow .2s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;overflow:hidden}
+.choice.a{background:var(--a-soft);border-color:var(--a);box-shadow:0 6px 0 var(--a)}
+.choice.b{background:var(--b-soft);border-color:var(--b);box-shadow:0 6px 0 var(--b)}
+.choice:hover{filter:saturate(1.15)}
+.choice:active{transform:translateY(4px)}
+.choice.pop{animation:pop .28s ease}
+@keyframes pop{40%{transform:scale(1.04)}100%{transform:scale(1)}}
+.choice[aria-disabled="true"]{cursor:default}
+.choice[aria-disabled="true"]:active{transform:none}
+.emoji{font-size:clamp(56px,9vw,88px);line-height:1}
+.label{font-family:var(--display);font-weight:700;font-size:clamp(22px,3.2vw,32px);line-height:1.25;overflow-wrap:anywhere;text-wrap:balance}
+.plus{position:absolute;top:40%;font-family:var(--mono);font-weight:600;font-size:30px;pointer-events:none;animation:floatUp .7s ease forwards}
+.choice.a .plus{color:var(--a)} .choice.b .plus{color:var(--b)}
+@keyframes floatUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-60px)}}
+.or{align-self:center;width:58px;height:58px;border-radius:50%;background:var(--pop);border:3px solid var(--paper);color:#1e1b3a;font-family:var(--display);font-weight:900;box-shadow:0 4px 12px var(--shadow-soft);transform:rotate(-8deg);font-size:22px;display:grid;place-items:center}
+
+.stepper{display:flex;align-items:center;justify-content:center;gap:12px}
+.step{font:inherit;font-family:var(--mono);font-size:24px;line-height:1;width:52px;height:52px;border-radius:50%;border:1px solid var(--rule-strong);background:var(--paper);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.step.plusb{border-width:2px;border-color:currentColor}
+.side.a .step.plusb{color:var(--a)} .side.b .step.plusb{color:var(--b)}
+.count{font-family:var(--mono);font-weight:600;font-size:28px;min-width:2.2ch;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ---- מד האחוזים ---- */
+.meter{display:grid;gap:8px}
+.bar{display:flex;height:34px;border-radius:999px;overflow:hidden;background:var(--paper-2);border:1px solid var(--rule)}
+.bar .seg-a{background:var(--a);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bar .seg-b{background:var(--b);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bar.empty .seg-a,.bar.empty .seg-b{background:var(--paper-2)}
+.bar.empty .seg-a{border-left:1px solid var(--rule-strong)}
+.nums{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pct{font-family:var(--mono);font-weight:600;font-size:clamp(28px,4.6vw,44px);line-height:1;font-variant-numeric:tabular-nums}
+.pct.a{color:var(--a)} .pct.b{color:var(--b)}
+.total{color:var(--ink-faint);font-weight:500;font-size:15px;text-align:center}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.controls .left{display:flex;flex-wrap:wrap;gap:8px}
+.settings{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;font-size:15px;color:var(--ink-soft);font-weight:500;border-top:1px solid var(--rule);padding-top:14px}
+.check{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--primary)}
+.hint{font-size:13px;color:var(--ink-faint);font-family:var(--mono)}
+
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--danger-soft);border:1px solid var(--danger);border-radius:14px;padding:8px 12px;font-weight:600;font-size:15px;width:100%}
+.confirm button{font:inherit;font-size:14px;font-weight:600;border-radius:999px;padding:4px 14px;cursor:pointer;border:1px solid var(--rule-strong);background:transparent;color:var(--ink)}
+.confirm button.yes{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* ---- פאנל עריכה ---- */
+.editor{background:var(--paper);border:1px solid var(--rule);border-radius:24px;box-shadow:0 6px 20px var(--shadow-soft);padding:20px;display:grid;gap:14px}
+.editor h2{font-family:var(--display);font-weight:700;font-size:26px;margin:0}
+.editor p{margin:0;color:var(--ink-soft);font-size:15px}
+label{display:grid;gap:4px;font-weight:600;font-size:15px}
+input[type=text]{font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-strong);border-radius:10px;padding:8px 12px;width:100%;min-width:0}
+.pair{display:grid;grid-template-columns:76px minmax(0,1fr) 76px minmax(0,1fr);gap:10px;align-items:end}
+.pair input.em{text-align:center;font-size:22px;padding:5px 6px}
+.addrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.msg{min-height:1.4em;font-size:15px;color:var(--primary);font-weight:600}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.list li{background:var(--bg);border:1px solid var(--rule);border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.list li.current{border-color:var(--pop);box-shadow:inset 0 0 0 1px var(--pop);background:var(--pop-soft)}
+.list .txt{font-weight:500;min-width:0;overflow-wrap:anywhere;flex:1 1 220px}
+.list .txt small{color:var(--ink-faint);font-weight:700;margin-inline:6px}
+.list .acts{display:flex;gap:6px}
+.list .acts button{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:transparent;border:1px solid var(--rule-strong);border-radius:999px;padding:2px 12px;cursor:pointer}
+.mine{font-size:12px;font-weight:700;color:var(--primary);background:var(--paper-2);border-radius:999px;padding:0 8px;margin-inline-start:6px}
+.topicrow{display:grid;grid-template-columns:minmax(0,1fr);max-width:420px}
+
+/* ---- סיכום ---- */
+.win{position:fixed;inset:0;display:grid;place-items:center;background:rgba(23,19,42,.5);z-index:20;padding:16px;overflow-y:auto}
+.win-card{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:18px;padding:24px clamp(16px,4vw,30px);max-width:620px;width:100%;box-shadow:0 20px 50px var(--shadow);display:grid;gap:14px}
+.win-card h2{font-family:var(--display);font-weight:900;font-size:32px;margin:0;text-align:center}
+.sum{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-height:55vh;overflow-y:auto}
+.sum li{display:grid;gap:4px}
+.sum .row{display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:15px}
+.sum .row span{min-width:0;overflow-wrap:anywhere}
+.sum .mini{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--paper-2)}
+.sum .mini i{display:block}
+.sum .none{color:var(--ink-faint);font-size:14px}
+.win-acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+canvas.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+
+/* ---- מצב מקרן ---- */
+body.projector .wrap{max-width:1500px;gap:16px}
+body.projector .sub,body.projector .editor{display:none}
+body.projector .choice{min-height:min(48vh,440px)}
+body.projector .emoji{font-size:clamp(80px,11vw,150px)}
+body.projector .label{font-size:clamp(30px,4vw,56px)}
+body.projector .ask{font-size:clamp(28px,3.6vw,46px)}
+body.projector .bar{height:48px}
+body.projector .pct{font-size:clamp(40px,5vw,72px)}
+body.projector .or{width:84px;height:84px;font-size:30px}
+
+/* ---- מצב נייד ---- */
+body.mobile .wrap{max-width:520px}
+body.mobile .choices{grid-template-columns:1fr}
+body.mobile .choice{min-height:150px;padding:16px 12px}
+body.mobile .or{justify-self:center;width:48px;height:48px;font-size:18px;margin:-6px 0}
+body.mobile .pair{grid-template-columns:70px minmax(0,1fr)}
+body.mobile .controls .cta{width:100%}
+@media (max-width:640px){
+  .choices{grid-template-columns:1fr}
+  .choice{min-height:150px;padding:16px 12px}
+  .or{justify-self:center;width:48px;height:48px;font-size:18px;margin:-6px 0}
+  .pair{grid-template-columns:70px minmax(0,1fr)}
+  .controls{justify-content:center}
+  .controls .cta{width:100%}
+}
+
+@media (max-width:480px){@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <span class="eyebrow">משחק שבירת קרח</span>
+      <h1><em>זה</em> או <em class="b">זה</em>? <span class="topic" id="topicTitle">דילמות של מורים</span></h1>
+      <p class="sub">כל אחד בתורו לוחץ על התיבה שהוא מעדיף, או שהמנחה סופר ידיים ומזין את המספר. המד מראה מה הקבוצה בחרה.</p>
+    </div>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="מצב תצוגה">
+        <button type="button" data-mode="normal" aria-pressed="true">רגיל</button>
+        <button type="button" data-mode="projector" aria-pressed="false">מקרן</button>
+        <button type="button" data-mode="mobile" aria-pressed="false">נייד</button>
+      </div>
+      <button class="ghost" id="fullBtn" type="button" hidden>מסך מלא</button>
+      <button class="ghost" id="muteBtn" type="button" aria-pressed="false">צלילים: פועלים</button>
+    </div>
+  </header>
+
+  <section class="stage" aria-label="הדילמה">
+    <div class="card">
+      <div class="meta">
+        <span id="counter">דילמה 1 מתוך 10</span>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+
+      <div class="dilemma" id="dilemma">
+        <p class="ask">מה אתם מעדיפים?</p>
+        <div class="choices" style="margin-top:14px">
+          <div class="side a">
+            <button class="choice a" id="choiceA" type="button">
+              <span class="emoji" id="emA"></span>
+              <span class="label" id="txA"></span>
+            </button>
+            <div class="stepper" id="stepA" hidden>
+              <button class="step" type="button" data-side="0" data-d="-1" aria-label="הורדת יד אחת מהצד הימני">−</button>
+              <span class="count" id="cntA">0</span>
+              <button class="step plusb" type="button" data-side="0" data-d="1" aria-label="הוספת יד אחת לצד הימני">+</button>
+            </div>
+          </div>
+          <div class="or" aria-hidden="true">או</div>
+          <div class="side b">
+            <button class="choice b" id="choiceB" type="button">
+              <span class="emoji" id="emB"></span>
+              <span class="label" id="txB"></span>
+            </button>
+            <div class="stepper" id="stepB" hidden>
+              <button class="step" type="button" data-side="1" data-d="-1" aria-label="הורדת יד אחת מהצד השמאלי">−</button>
+              <span class="count" id="cntB">0</span>
+              <button class="step plusb" type="button" data-side="1" data-d="1" aria-label="הוספת יד אחת לצד השמאלי">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meter" aria-live="polite">
+        <div class="nums">
+          <span class="pct a" id="pctA">0%</span>
+          <span class="total" id="total">עוד אין הצבעות</span>
+          <span class="pct b" id="pctB">0%</span>
+        </div>
+        <div class="bar empty" id="bar"><div class="seg-a" id="segA" style="width:50%"></div><div class="seg-b" id="segB" style="width:50%"></div></div>
+      </div>
+
+      <div class="controls">
+        <div class="left" id="leftCtl">
+          <button class="ghost" id="prevBtn" type="button">הקודמת</button>
+          <button class="ghost" id="undoBtn" type="button">ביטול הקשה אחרונה</button>
+          <button class="ghost" id="resetBtn" type="button">איפוס ההצבעה</button>
+          <button class="ghost" id="revealBtn" type="button" hidden>חשיפת התוצאות</button>
+        </div>
+        <button class="cta" id="nextBtn" type="button">לדילמה הבאה</button>
+      </div>
+      <div id="confirmSlot"></div>
+
+      <div class="settings">
+        <span>אופן ההצבעה:</span>
+        <div class="seg" role="group" aria-label="אופן ההצבעה">
+          <button type="button" data-vote="tap" aria-pressed="true">הקשות על המסך</button>
+          <button type="button" data-vote="hands" aria-pressed="false">ספירת ידיים</button>
+        </div>
+        <label class="check" style="display:inline-flex;font-weight:600"><input type="checkbox" id="hideChk"> הסתרת התוצאות עד החשיפה</label>
+        <span class="hint">מקלדת: 1 ו־2 להצבעה, חצים למעבר בין דילמות</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="editor" aria-labelledby="edTitle">
+    <h2 id="edTitle">הדילמות שלכם</h2>
+    <p>הוסיפו דילמה משלכם: אימוג'י וכיתוב לכל צד. הרשימה נשמרת בדפדפן הזה.</p>
+    <div class="topicrow">
+      <label for="topicIn">נושא הסבב
+        <input id="topicIn" type="text" maxlength="40" value="דילמות של מורים">
+      </label>
+    </div>
+    <form id="addForm" style="display:grid;gap:12px">
+      <div class="pair">
+        <label for="inEA">אימוג'י<input class="em" id="inEA" type="text" maxlength="8" placeholder="🍕"></label>
+        <label for="inTA">אפשרות ראשונה<input id="inTA" type="text" maxlength="60" placeholder="למשל: פיצה בחדר המורים"></label>
+        <label for="inEB">אימוג'י<input class="em" id="inEB" type="text" maxlength="8" placeholder="🥗"></label>
+        <label for="inTB">אפשרות שנייה<input id="inTB" type="text" maxlength="60" placeholder="למשל: סלט בשקט בכיתה"></label>
+      </div>
+      <div class="addrow">
+        <button class="ghost" type="submit" style="font-weight:700">הוספת הדילמה</button>
+        <button class="ghost" id="restoreBtn" type="button">חזרה לרשימה המקורית</button>
+      </div>
+    </form>
+    <div class="msg" id="msg" role="status"></div>
+    <ul class="list" id="list"></ul>
+  </section>
+
+</div>
+
+<div class="win" id="win" hidden>
+  <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <h2 id="winTitle">סיכום הסבב</h2>
+    <ul class="sum" id="sum"></ul>
+    <div class="win-acts">
+      <button class="cta" id="newRound" type="button">סבב חדש מההתחלה</button>
+      <button class="ghost" id="closeSum" type="button">חזרה לדילמות</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const KEY = 'this-or-that-v1';
+  const DEFAULTS = [
+    {a:['📝','לבדוק 30 מבחנים בערב אחד'], b:['🗂️','למלא 30 טפסים של המשרד']},
+    {a:['🌅','שיעור ראשון בשמונה בבוקר'], b:['🌇','שיעור שמיני ביום חמישי']},
+    {a:['🎒','טיול שנתי עם לינה בצפון'], b:['🏛️','סיור יומי במוזיאון']},
+    {a:['🤝','אסיפת הורים פנים אל פנים'], b:['💻','אסיפת הורים בזום']},
+    {a:['🖍️','לוח וגיר שתמיד עובדים'], b:['🖥️','לוח חכם שלפעמים נתקע']},
+    {a:['🔔','הפסקה ארוכה אחת'], b:['⏱️','שלוש הפסקות קצרות']},
+    {a:['🤫','כיתה של 40 תלמידים שקטים'], b:['🗣️','כיתה של 15 תלמידים פטפטנים']},
+    {a:['✍️','לכתוב מערך שיעור מאפס'], b:['🤖','לשפר מערך שהבינה המלאכותית כתבה']},
+    {a:['🏖️','חופש גדול של חודשיים'], b:['📅','שבוע חופש בכל חודש']},
+    {a:['🎤','להנחות את טקס יום הזיכרון'], b:['🎭','לביים את הצגת סוף השנה']}
+  ];
+  const DEFAULT_TOPIC = 'דילמות של מורים';
+  const mkDefaults = () => DEFAULTS.map((d,i) => ({id:'d'+(i+1), a:d.a.slice(), b:d.b.slice(), mine:false}));
+
+  const state = { topic:DEFAULT_TOPIC, list:mkDefaults(), votes:{}, idx:0, mode:'normal', voteMode:'tap', hide:false, muted:false };
+  const revealed = {};
+  let tapLog = [];
+
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (s && Array.isArray(s.list) && s.list.length) Object.assign(state, s);
+  } catch(_){}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(_){} }
+
+  const $ = id => document.getElementById(id);
+  const cur = () => state.list[state.idx];
+  const votesOf = d => (state.votes[d.id] || (state.votes[d.id] = [0,0]));
+
+  // ---------- חישוב אחוזים: סכום תמיד 100, ובלי הצבעות מוצג 0% ומד ניטרלי ----------
+  function pct(a, b){
+    const t = a + b;
+    if (!t) return {pa:0, pb:0, wa:50, wb:50, empty:true, t:0};
+    const pa = Math.round(a * 100 / t);
+    return {pa, pb:100 - pa, wa:pa, wb:100 - pa, empty:false, t};
+  }
+
+  // ---------- צלילים ----------
+  let ac = null;
+  function ensureAudio(){
+    if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
+    try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch(_){ ac = null; }
+  }
+  document.addEventListener('pointerdown', ensureAudio, {passive:true});
+  document.addEventListener('keydown', ensureAudio);
+  function tone(f, dur, opts={}){
+    if (!ac || state.muted) return;
+    const t = ac.currentTime + (opts.delay || 0);
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = opts.type || 'sine';
+    o.frequency.setValueAtTime(f, t);
+    if (opts.to) o.frequency.exponentialRampToValueAtTime(opts.to, t + dur);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(opts.vol || 0.12, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur + 0.05);
+  }
+  const sfx = {
+    tap: s => { tone(s ? 523.25 : 659.25, .16); tone(s ? 784 : 987.77, .12, {delay:.05, vol:.06}); },
+    minus: () => tone(330, .14, {type:'triangle', vol:.09}),
+    next: () => tone(380, .28, {type:'triangle', to:760, vol:.07}),
+    reveal: () => [523.25, 659.25, 783.99].forEach((f,i) => tone(f, .35, {delay:i*.09, vol:.1})),
+    finale: () => [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => tone(f, .5, {delay:i*.11, vol:.12}))
+  };
+
+  // ---------- תצוגה ----------
+  let shown = [0,0], raf = 0;
+  function animateNums(ta, tb, hidden){
+    cancelAnimationFrame(raf);
+    if (hidden){ $('pctA').textContent = '?'; $('pctB').textContent = '?'; return; }
+    const from = shown.slice(), t0 = performance.now(), D = 450;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (function f(now){
+      const k = reduce ? 1 : Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      const a = Math.round(from[0] + (ta - from[0]) * e), b = Math.round(from[1] + (tb - from[1]) * e);
+      $('pctA').textContent = a + '%'; $('pctB').textContent = b + '%';
+      if (k < 1) raf = requestAnimationFrame(f); else shown = [ta, tb];
+    })(t0);
+  }
+
+  function renderMeter(){
+    const d = cur(), v = votesOf(d), p = pct(v[0], v[1]);
+    const hidden = state.hide && !revealed[d.id] && state.voteMode === 'tap';
+    const bar = $('bar');
+    bar.classList.toggle('empty', p.empty || hidden);
+    $('segA').style.width = (hidden ? 50 : p.wa) + '%';
+    $('segB').style.width = (hidden ? 50 : p.wb) + '%';
+    animateNums(p.pa, p.pb, hidden);
+    const word = p.t === 1 ? 'הצבעה אחת' : p.t + ' הצבעות';
+    $('total').textContent = !p.t ? 'עוד אין הצבעות' : hidden ? word + ' · התוצאות מוסתרות' : word + ' · ' + v[0] + ' מול ' + v[1];
+    $('cntA').textContent = v[0]; $('cntB').textContent = v[1];
+    $('revealBtn').hidden = !hidden || !p.t;
+    $('undoBtn').disabled = !tapLog.some(x => x.id === d.id);
+    $('resetBtn').disabled = !p.t;
+  }
+
+  function renderCard(){
+    const d = cur(), n = state.list.length;
+    $('emA').textContent = d.a[0]; $('txA').textContent = d.a[1];
+    $('emB').textContent = d.b[0]; $('txB').textContent = d.b[1];
+    $('choiceA').setAttribute('aria-label', 'הצבעה ל' + d.a[1]);
+    $('choiceB').setAttribute('aria-label', 'הצבעה ל' + d.b[1]);
+    $('counter').textContent = 'דילמה ' + (state.idx + 1) + ' מתוך ' + n;
+    $('dots').innerHTML = state.list.map((x,i) => '<span class="' + (i === state.idx ? 'now' : (state.votes[x.id] && state.votes[x.id][0] + state.votes[x.id][1]) ? 'done' : '') + '"></span>').join('');
+    $('prevBtn').disabled = state.idx === 0;
+    $('nextBtn').textContent = state.idx === n - 1 ? 'לסיכום הסבב' : 'לדילמה הבאה';
+    const v = votesOf(d), p = pct(v[0], v[1]);
+    shown = (state.hide && !revealed[d.id] && state.voteMode === 'tap') ? [0,0] : shown;
+    renderMeter();
+    renderList();
+  }
+
+  function renderModes(){
+    document.body.classList.toggle('projector', state.mode === 'projector');
+    document.body.classList.toggle('mobile', state.mode === 'mobile');
+    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === state.mode));
+    $('fullBtn').hidden = state.mode !== 'projector';
+    const hands = state.voteMode === 'hands';
+    document.querySelectorAll('[data-vote]').forEach(b => b.setAttribute('aria-pressed', b.dataset.vote === state.voteMode));
+    $('stepA').hidden = $('stepB').hidden = !hands;
+    $('choiceA').setAttribute('aria-disabled', hands); $('choiceB').setAttribute('aria-disabled', hands);
+    $('undoBtn').hidden = hands;
+    $('hideChk').checked = state.hide;
+    $('muteBtn').textContent = state.muted ? 'צלילים: כבויים' : 'צלילים: פועלים';
+    $('muteBtn').setAttribute('aria-pressed', state.muted);
+    $('topicTitle').textContent = state.topic;
+    if (document.activeElement !== $('topicIn')) $('topicIn').value = state.topic;
+  }
+
+  function renderAll(){ renderModes(); renderCard(); }
+
+  // ---------- הצבעה ----------
+  function vote(side){
+    if (state.voteMode !== 'tap') return;
+    const d = cur(); votesOf(d)[side]++;
+    tapLog.push({id:d.id, side}); if (tapLog.length > 200) tapLog.shift();
+    const el = side ? $('choiceB') : $('choiceA');
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    const plus = document.createElement('span'); plus.className = 'plus'; plus.textContent = '+1';
+    el.appendChild(plus); setTimeout(() => plus.remove(), 720);
+    sfx.tap(side); save(); renderMeter(); updateDots();
+  }
+  function stepVote(side, delta){
+    const v = votesOf(cur());
+    if (delta < 0 && v[side] === 0) return;
+    v[side] = Math.max(0, v[side] + delta);
+    delta > 0 ? sfx.tap(side) : sfx.minus();
+    save(); renderMeter(); updateDots();
+  }
+  function updateDots(){
+    const spans = $('dots').children;
+    state.list.forEach((x,i) => { if (spans[i] && i !== state.idx){ const v = state.votes[x.id]; spans[i].className = v && v[0] + v[1] ? 'done' : ''; } });
+  }
+  $('choiceA').addEventListener('click', () => vote(0));
+  $('choiceB').addEventListener('click', () => vote(1));
+  document.querySelectorAll('.step').forEach(b => b.addEventListener('click', () => stepVote(+b.dataset.side, +b.dataset.d)));
+
+  $('undoBtn').addEventListener('click', () => {
+    const d = cur();
+    for (let i = tapLog.length - 1; i >= 0; i--){
+      if (tapLog[i].id === d.id){ const v = votesOf(d); v[tapLog[i].side] = Math.max(0, v[tapLog[i].side] - 1); tapLog.splice(i,1); break; }
+    }
+    sfx.minus(); save(); renderMeter(); updateDots();
+  });
+  $('revealBtn').addEventListener('click', () => { revealed[cur().id] = true; sfx.reveal(); renderMeter(); });
+
+  // ---------- אישור בתוך הדף ----------
+  function askConfirm(slot, text, yesLabel, onYes){
+    document.querySelectorAll('.confirm').forEach(c => c.remove());
+    const box = document.createElement('div'); box.className = 'confirm'; box.setAttribute('role','alertdialog');
+    box.innerHTML = '<span></span><button type="button" class="yes"></button><button type="button" class="no">ביטול</button>';
+    box.firstChild.textContent = text; box.querySelector('.yes').textContent = yesLabel;
+    box.querySelector('.yes').addEventListener('click', () => { box.remove(); onYes(); });
+    box.querySelector('.no').addEventListener('click', () => box.remove());
+    slot.appendChild(box); box.querySelector('.no').focus();
+  }
+  $('resetBtn').addEventListener('click', () => askConfirm($('confirmSlot'), 'לאפס את ההצבעה בדילמה הזו?', 'כן, לאפס', () => {
+    const d = cur(); state.votes[d.id] = [0,0]; tapLog = tapLog.filter(x => x.id !== d.id); delete revealed[d.id];
+    sfx.minus(); save(); renderMeter(); updateDots();
+  }));
+
+  // ---------- מעבר בין דילמות ----------
+  let moving = false;
+  function go(to){
+    if (moving || to < 0 || to >= state.list.length || to === state.idx) return;
+    document.querySelectorAll('.confirm').forEach(c => c.remove());
+    const dir = to > state.idx ? 1 : -1, el = $('dilemma');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sfx.next();
+    if (reduce){ state.idx = to; save(); renderCard(); return; }
+    moving = true;
+    el.style.setProperty('--dx', dir);
+    el.classList.add('out');
+    el.style.transform = 'translateX(' + (dir * -40) + 'px)';
+    setTimeout(() => {
+      state.idx = to; save(); shown = [0,0]; renderCard();
+      el.classList.remove('out'); el.classList.add('pre');
+      el.style.transform = 'translateX(' + (dir * 40) + 'px)';
+      void el.offsetWidth;
+      el.classList.remove('pre'); el.style.transform = '';
+      moving = false;
+    }, 260);
+  }
+  $('nextBtn').addEventListener('click', () => state.idx === state.list.length - 1 ? openSummary() : go(state.idx + 1));
+  $('prevBtn').addEventListener('click', () => go(state.idx - 1));
+
+  // ---------- סיכום ----------
+  function openSummary(){
+    const ul = $('sum'); ul.innerHTML = '';
+    state.list.forEach(d => {
+      const v = votesOf(d), p = pct(v[0], v[1]);
+      const li = document.createElement('li');
+      const row = document.createElement('div'); row.className = 'row';
+      const sa = document.createElement('span'), sb = document.createElement('span');
+      sa.textContent = d.a[0] + ' ' + d.a[1] + (p.t ? ' ' + p.pa + '%' : '');
+      sb.textContent = (p.t ? p.pb + '% ' : '') + d.b[1] + ' ' + d.b[0];
+      sb.style.textAlign = 'left';
+      row.append(sa, sb); li.appendChild(row);
+      if (p.t){
+        li.insertAdjacentHTML('beforeend', '<div class="mini"><i style="width:' + p.wa + '%;background:var(--a)"></i><i style="width:' + p.wb + '%;background:var(--b)"></i></div>');
+      } else {
+        li.insertAdjacentHTML('beforeend', '<div class="none">לא הצביעו בדילמה הזו</div>');
+      }
+      ul.appendChild(li);
+    });
+    $('win').hidden = false; $('newRound').focus(); sfx.finale(); confetti();
+  }
+  $('closeSum').addEventListener('click', () => { $('win').hidden = true; $('nextBtn').focus(); });
+  $('newRound').addEventListener('click', () => {
+    state.votes = {}; tapLog = []; Object.keys(revealed).forEach(k => delete revealed[k]);
+    state.idx = 0; shown = [0,0]; save(); $('win').hidden = true; renderCard(); sfx.next();
+  });
+  $('win').addEventListener('click', e => { if (e.target === $('win')) $('closeSum').click(); });
+
+  function confetti(){
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cv = document.createElement('canvas'); cv.className = 'confetti'; document.body.appendChild(cv);
+    const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.scale(dpr,dpr);
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ['--a','--b','--pop','--primary','--primary-2'].map(v => cs.getPropertyValue(v).trim());
+    const ps = Array.from({length:140}, () => ({ x:Math.random()*innerWidth, y:-20-Math.random()*innerHeight*0.5,
+      vx:(Math.random()-.5)*3, vy:2+Math.random()*3, s:6+Math.random()*6, a:Math.random()*6, va:(Math.random()-.5)*.3,
+      c:cols[Math.floor(Math.random()*cols.length)] }));
+    const t1 = performance.now();
+    (function frame(now){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .04; p.a += p.va;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx.restore(); });
+      if (now - t1 < 3500) requestAnimationFrame(frame); else cv.remove();
+    })(t1);
+  }
+
+  // ---------- מצבי תצוגה והגדרות ----------
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+    state.mode = b.dataset.mode; save(); renderModes();
+    if (state.mode !== 'projector' && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  }));
+  $('fullBtn').addEventListener('click', () => {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+    } catch(_){}
+  });
+  document.addEventListener('fullscreenchange', () => { $('fullBtn').textContent = document.fullscreenElement ? 'יציאה ממסך מלא' : 'מסך מלא'; });
+  document.querySelectorAll('[data-vote]').forEach(b => b.addEventListener('click', () => { state.voteMode = b.dataset.vote; save(); renderModes(); renderMeter(); }));
+  $('hideChk').addEventListener('change', e => { state.hide = e.target.checked; save(); shown = [0,0]; renderMeter(); });
+  $('muteBtn').addEventListener('click', () => { state.muted = !state.muted; save(); renderModes(); if (!state.muted) sfx.tap(0); });
+
+  document.addEventListener('keydown', e => {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (!$('win').hidden){ if (e.key === 'Escape') $('closeSum').click(); return; }
+    if (e.key === '1') { state.voteMode === 'tap' ? vote(0) : stepVote(0, 1); }
+    else if (e.key === '2') { state.voteMode === 'tap' ? vote(1) : stepVote(1, 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); $('nextBtn').click(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); go(state.idx - 1); }
+  });
+
+  // ---------- עורך ----------
+  const msg = t => { $('msg').textContent = t; };
+  function renderList(){
+    const ul = $('list'); ul.innerHTML = '';
+    state.list.forEach((d,i) => {
+      const li = document.createElement('li'); if (i === state.idx) li.className = 'current';
+      const txt = document.createElement('span'); txt.className = 'txt';
+      txt.append(d.a[0] + ' ' + d.a[1]);
+      const or = document.createElement('small'); or.textContent = 'או'; txt.append(or);
+      txt.append(d.b[0] + ' ' + d.b[1]);
+      if (d.mine){ const m = document.createElement('span'); m.className = 'mine'; m.textContent = 'שלכם'; txt.append(m); }
+      const acts = document.createElement('span'); acts.className = 'acts';
+      const show = document.createElement('button'); show.type = 'button'; show.textContent = 'להציג';
+      show.addEventListener('click', () => { go(i); $('dilemma').scrollIntoView({behavior:'smooth', block:'center'}); });
+      const del = document.createElement('button'); del.type = 'button'; del.textContent = 'מחיקה';
+      del.addEventListener('click', () => {
+        if (state.list.length <= 1){ msg('צריך להשאיר לפחות דילמה אחת.'); return; }
+        askConfirm(li, 'למחוק את הדילמה הזו?', 'כן, למחוק', () => {
+          state.list.splice(i, 1); delete state.votes[d.id];
+          if (state.idx > i || state.idx >= state.list.length) state.idx = Math.max(0, state.idx - 1);
+          save(); shown = [0,0]; renderCard(); msg('הדילמה נמחקה.');
+        });
+      });
+      acts.append(show, del); li.append(txt, acts); ul.appendChild(li);
+    });
+  }
+
+  $('addForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const ta = $('inTA').value.trim(), tb = $('inTB').value.trim();
+    if (!ta || !tb){ msg('כתבו כיתוב לשתי האפשרויות.'); return; }
+    const ea = $('inEA').value.trim() || '✨', eb = $('inEB').value.trim() || '💡';
+    state.list.push({id:'u' + Date.now().toString(36), a:[ea, ta], b:[eb, tb], mine:true});
+    ['inEA','inTA','inEB','inTB'].forEach(id => $(id).value = '');
+    save(); renderCard(); msg('הדילמה נוספה בסוף הרשימה (מספר ' + state.list.length + ').');
+    $('inEA').focus();
+  });
+  $('restoreBtn').addEventListener('click', () => askConfirm($('msg'), 'לחזור לעשר הדילמות המקוריות? הדילמות שהוספתם וההצבעות יימחקו.', 'כן, לחזור', () => {
+    state.list = mkDefaults(); state.votes = {}; state.idx = 0; state.topic = DEFAULT_TOPIC; tapLog = [];
+    save(); shown = [0,0]; renderAll(); msg('הרשימה המקורית חזרה.');
+  }));
+  $('topicIn').addEventListener('input', e => { state.topic = e.target.value.trim() || DEFAULT_TOPIC; $('topicTitle').textContent = state.topic; save(); });
+
+  if (state.idx >= state.list.length) state.idx = 0;
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>זירת דילמות וטיעונים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+<style>
+/* Layout: הדילמה בגדול למעלה, שתי עמודות כרטיסיות (בעד ירוק מימין, נגד כחול משמאל), אזור הצבעה עם מד אחוזים, ופאנל עריכה מתקפל למטה */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --surface-2:#eceff4;
+  --text:#1b2430; --text-soft:#4b5868; --text-faint:#768394; --border:#d8dee6;
+  --pro:#15803d; --pro-soft:#e6f5eb; --pro-ink:#14532d; --pro-on:#ffffff;
+  --con:#1d4ed8; --con-soft:#e7eefd; --con-ink:#1e3a8a; --con-on:#ffffff;
+  --action:#1b2430; --action-on:#ffffff; --focus:#f59e0b; --danger:#b42318;
+  --shadow:0 1px 3px rgba(20,30,45,.08),0 4px 14px rgba(20,30,45,.06);
+  --font:"Heebo",sans-serif; --title:"Varela Round","Heebo",sans-serif;
+  --num:"Heebo",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f141a; --surface:#18202a; --surface-2:#212b37;
+  --text:#e9eef4; --text-soft:#b3bfcc; --text-faint:#7f8c9b; --border:#2d3846;
+  --pro:#4ade80; --pro-soft:#13301f; --pro-ink:#a7f3c0; --pro-on:#052e14;
+  --con:#7aa7ff; --con-soft:#172544; --con-ink:#c9d9ff; --con-on:#0a1a3d;
+  --action:#e9eef4; --action-on:#0f141a; --focus:#fbbf24; --danger:#ff8a7a;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f141a; --surface:#18202a; --surface-2:#212b37;
+  --text:#e9eef4; --text-soft:#b3bfcc; --text-faint:#7f8c9b; --border:#2d3846;
+  --pro:#4ade80; --pro-soft:#13301f; --pro-ink:#a7f3c0; --pro-on:#052e14;
+  --con:#7aa7ff; --con-soft:#172544; --con-ink:#c9d9ff; --con-on:#0a1a3d;
+  --action:#e9eef4; --action-on:#0f141a; --focus:#fbbf24; --danger:#ff8a7a;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.6;direction:rtl;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding-block:28px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+
+header{display:grid;gap:8px;text-align:center;justify-items:center}
+.label{margin:0;font-size:14px;font-weight:700;color:var(--text-faint);letter-spacing:.04em}
+h1{font-weight:800;font-size:clamp(28px,5.4vw,52px);line-height:1.2;margin:0;text-wrap:balance;overflow-wrap:anywhere;max-width:24ch}
+.sub{margin:0;color:var(--text-soft);max-width:60ch}
+
+.ghost{font:inherit;font-size:15px;font-weight:600;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 16px;cursor:pointer;touch-action:manipulation}
+.ghost:hover{background:var(--surface-2)}
+.primary{font:inherit;font-weight:700;font-size:17px;color:var(--action-on);background:var(--action);border:0;border-radius:12px;padding:11px 24px;cursor:pointer;white-space:nowrap;touch-action:manipulation}
+.primary:hover{opacity:.9}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+header .tools{justify-content:center}
+
+/* ---------- עמודות הטיעונים ---------- */
+.table{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:760px){.table{grid-template-columns:1fr}}
+.col{border-radius:18px;padding:16px;display:grid;gap:12px}
+.col.pro{background:var(--pro-soft)}
+.col.con{background:var(--con-soft)}
+.col h2{font-weight:800;font-size:clamp(24px,3.4vw,32px);margin:0;display:flex;align-items:center;gap:10px}
+.col.pro h2{color:var(--pro-ink)} .col.con h2{color:var(--con-ink)}
+.col h2 .dot{width:14px;height:14px;border-radius:50%;flex:none}
+.col.pro .dot{background:var(--pro)} .col.con .dot{background:var(--con)}
+.cards{display:grid;gap:12px}
+
+.card{font:inherit;color:inherit;text-align:start;background:none;border:0;padding:0;cursor:pointer;perspective:1200px;display:block;width:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border-radius:14px}
+.card-inner{display:grid;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.7,.3,1)}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border-radius:14px;padding:16px 18px;border:1px solid var(--border);box-shadow:var(--shadow);display:grid;gap:6px;align-content:start;min-height:150px}
+.back{transform:rotateY(180deg)}
+.pro .front{border-inline-start:7px solid var(--pro)} .con .front{border-inline-start:7px solid var(--con)}
+.pro .back{border:2px solid var(--pro)} .con .back{border:2px solid var(--con)}
+.tag{font-size:14px;font-weight:800;letter-spacing:.02em}
+.pro .tag,.pro .lbl{color:var(--pro-ink)} .con .tag,.con .lbl{color:var(--con-ink)}
+.claim{font-weight:800;font-size:clamp(20px,2.6vw,25px);line-height:1.3;overflow-wrap:anywhere}
+.hint{font-size:14px;color:var(--text-faint);margin-top:auto}
+.lbl{display:block;font-size:14px;font-weight:800}
+.txt{display:block;font-size:16.5px;line-height:1.55;overflow-wrap:anywhere}
+.empty-col{color:var(--text-soft);font-size:15px;margin:0}
+
+/* ---------- הצבעה ---------- */
+.vote-area{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:18px;padding:clamp(14px,2.6vw,24px);display:grid;gap:16px}
+.vote-area h2{font-weight:800;font-size:clamp(24px,3.4vw,32px);margin:0}
+.vote-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.vote-btns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:480px){.vote-btns{grid-template-columns:1fr}}
+.vote{position:relative;font:inherit;border:0;border-radius:16px;padding:16px 12px;min-height:96px;cursor:pointer;display:grid;place-items:center;gap:2px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;transition:transform .12s}
+.vote:active{transform:scale(.97)}
+.vote.pro{background:var(--pro);color:var(--pro-on)}
+.vote.con{background:var(--con);color:var(--con-on)}
+.vote .v-title{font-weight:800;font-size:clamp(24px,3.6vw,34px);line-height:1.1}
+.vote .v-num{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.vote.pulse{animation:pulse .45s ease-out}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--focus)}100%{box-shadow:0 0 0 16px transparent}}
+.plus{position:absolute;top:8px;inset-inline-end:14px;font-weight:800;font-size:22px;pointer-events:none;animation:rise .8s ease-out forwards}
+@keyframes rise{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-26px)}}
+
+.meter-box{display:grid;gap:8px}
+.pcts{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pct{font-family:var(--num);font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1;font-variant-numeric:tabular-nums}
+.pct small{display:block;font-family:var(--font);font-size:15px;font-weight:700;margin-bottom:4px}
+.pct.pro{color:var(--pro-ink)} .pct.con{color:var(--con-ink);text-align:left}
+.meter{display:flex;height:46px;border-radius:999px;overflow:hidden;background:var(--surface-2);border:1px solid var(--border)}
+.seg{height:100%;transition:width .8s cubic-bezier(.3,.8,.3,1);display:grid;place-items:center;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;min-width:0}
+.seg.pro{background:var(--pro);color:var(--pro-on)} .seg.con{background:var(--con);color:var(--con-on)}
+.meter.zero .seg{background:transparent}
+.meter.zero .seg.pro{border-inline-end:1px dashed var(--text-faint)}
+.status{margin:0;color:var(--text-soft);font-size:15px;font-weight:600;text-align:center}
+
+.manual{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px dashed var(--border);padding-top:14px}
+@media (max-width:480px){.manual{grid-template-columns:1fr}}
+.manual h3{grid-column:1/-1;margin:0;font-size:17px;font-weight:800}
+.manual h3 span{font-weight:400;color:var(--text-soft);font-size:15px}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:12px;padding:8px 10px}
+.counter.pro{background:var(--pro-soft);color:var(--pro-ink)} .counter.con{background:var(--con-soft);color:var(--con-ink)}
+.counter .c-name{font-weight:800;font-size:16px}
+.counter .c-ctrl{display:flex;align-items:center;gap:6px}
+.step{font:inherit;font-weight:800;font-size:19px;min-width:46px;height:46px;border-radius:10px;border:1.5px solid currentColor;background:var(--surface);color:inherit;cursor:pointer;touch-action:manipulation;padding:0 8px}
+.counter .c-num{font-family:var(--num);font-weight:700;font-size:24px;min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+.results-hidden .num{filter:blur(9px);user-select:none}
+.results-hidden .meter .seg{background:var(--text-faint);color:transparent}
+
+/* ---------- עורך ---------- */
+.editor{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:0}
+.editor summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:800;font-size:22px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-radius:18px}
+.editor summary::-webkit-details-marker{display:none}
+.editor summary::after{content:"+";font-weight:800;font-size:26px;color:var(--text-soft)}
+.editor[open] summary::after{content:"−"}
+.ed-body{padding:0 18px 18px;display:grid;gap:14px}
+.ed-body > p{margin:0;color:var(--text-soft);font-size:15px}
+label{display:grid;gap:4px;font-weight:700;font-size:15px}
+input,textarea{font:inherit;font-size:17px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;width:100%}
+textarea{min-height:64px;resize:vertical}
+.ed-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.ed-cols{grid-template-columns:1fr}}
+fieldset{border:0;margin:0;padding:12px;border-radius:14px;display:grid;gap:10px;min-width:0}
+fieldset.pro{background:var(--pro-soft)} fieldset.con{background:var(--con-soft)}
+legend{font-weight:800;font-size:19px;padding:0;float:right;width:100%}
+fieldset.pro legend{color:var(--pro-ink)} fieldset.con legend{color:var(--con-ink)}
+.arg{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;display:grid;gap:8px}
+.arg-top{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14px;color:var(--text-faint)}
+.rm{font:inherit;font-size:14px;font-weight:700;color:var(--danger);background:none;border:0;cursor:pointer;text-decoration:underline;padding:4px}
+.ed-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.msg{min-height:1.4em;font-size:15px;color:var(--text-soft);font-weight:700;margin:0}
+
+/* ---------- חלון אישור ---------- */
+.win{position:fixed;inset:0;display:grid;place-items:center;background:rgba(10,15,22,.55);z-index:20;padding:16px}
+.win-card{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:18px;padding:24px 26px;text-align:center;max-width:400px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);display:grid;gap:14px}
+.win-card h2{font-weight:800;font-size:24px;margin:0}
+.win-card p{margin:0;color:var(--text-soft)}
+.win-card .tools{justify-content:center}
+
+h1,.col h2,.claim,.vote .v-title,.vote-area h2,.win-card h2,.editor summary{font-family:var(--title);font-weight:400}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="label">זירת דילמות וטיעונים</p>
+    <h1 id="topic"></h1>
+    <p class="sub">הקישו על כרטיסייה כדי להפוך אותה ולראות את הנימוק ודוגמה מהחיים. בסוף הדיון מצביעים יחד על המסך הזה.</p>
+    <div class="tools">
+      <button class="ghost" id="flipAll" type="button">הפיכת כל הכרטיסיות</button>
+    </div>
+  </header>
+
+  <section class="table" aria-label="טיעונים בעד ונגד">
+    <div class="col pro">
+      <h2><span class="dot" aria-hidden="true"></span>בעד</h2>
+      <div class="cards" id="proCards"></div>
+    </div>
+    <div class="col con">
+      <h2><span class="dot" aria-hidden="true"></span>נגד</h2>
+      <div class="cards" id="conCards"></div>
+    </div>
+  </section>
+
+  <section class="vote-area" id="voteArea" aria-labelledby="voteTitle">
+    <div class="vote-head">
+      <h2 id="voteTitle">מה אתם חושבים?</h2>
+      <div class="tools">
+        <button class="ghost" id="hideRes" type="button" aria-pressed="false">הסתרת התוצאות בזמן ההצבעה</button>
+        <button class="ghost" id="undo" type="button">ביטול הפעולה האחרונה</button>
+        <button class="ghost" id="resetVotes" type="button">איפוס ההצבעה</button>
+      </div>
+    </div>
+    <p class="sub" style="margin:0">המשתתפים ניגשים בזה אחר זה, וכל אחד לוחץ על כפתור אחד. בהרמת ידיים סופרים בכפתורי הספירה הידנית.</p>
+
+    <div class="vote-btns">
+      <button class="vote pro" id="votePro" type="button">
+        <span class="v-title">נוטה להסכים</span>
+        <span class="v-num"><span class="num" id="proBtnNum">0</span> קולות</span>
+      </button>
+      <button class="vote con" id="voteCon" type="button">
+        <span class="v-title">נוטה להתנגד</span>
+        <span class="v-num"><span class="num" id="conBtnNum">0</span> קולות</span>
+      </button>
+    </div>
+
+    <div class="meter-box">
+      <div class="pcts">
+        <div class="pct pro"><small>נוטים להסכים</small><span class="num" id="proPct">0%</span></div>
+        <div class="pct con"><small>נוטים להתנגד</small><span class="num" id="conPct">0%</span></div>
+      </div>
+      <div class="meter zero" id="meter" role="img" aria-label="מד הסכמה">
+        <div class="seg pro" id="proSeg" style="width:50%"></div>
+        <div class="seg con" id="conSeg" style="width:50%"></div>
+      </div>
+      <p class="status" id="status" aria-live="polite"></p>
+    </div>
+
+    <div class="manual">
+      <h3>ספירה ידנית <span>להצבעה בהרמת ידיים</span></h3>
+      <div class="counter pro">
+        <span class="c-name">מסכימים</span>
+        <span class="c-ctrl">
+          <button class="step" type="button" data-side="pro" data-d="-1" aria-label="הורדת קול אחד ממסכימים">−</button>
+          <span class="c-num num" id="proCount">0</span>
+          <button class="step" type="button" data-side="pro" data-d="1" aria-label="הוספת קול אחד למסכימים">+</button>
+          <button class="step" type="button" data-side="pro" data-d="5" aria-label="הוספת חמישה קולות למסכימים">+5</button>
+        </span>
+      </div>
+      <div class="counter con">
+        <span class="c-name">מתנגדים</span>
+        <span class="c-ctrl">
+          <button class="step" type="button" data-side="con" data-d="-1" aria-label="הורדת קול אחד ממתנגדים">−</button>
+          <span class="c-num num" id="conCount">0</span>
+          <button class="step" type="button" data-side="con" data-d="1" aria-label="הוספת קול אחד למתנגדים">+</button>
+          <button class="step" type="button" data-side="con" data-d="5" aria-label="הוספת חמישה קולות למתנגדים">+5</button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <details class="editor" id="editor">
+    <summary>עריכת הדילמה והטיעונים</summary>
+    <div class="ed-body">
+      <p>כתבו דילמה משלכם ועד שישה טיעונים לכל צד. לכל טיעון: משפט קצר שיופיע על הכרטיסייה, נימוק, ודוגמה מהחיים שיופיעו בצד השני שלה.</p>
+      <form id="editForm" novalidate>
+        <div class="ed-body" style="padding:0">
+          <label for="topicIn">הדילמה
+            <input id="topicIn" type="text" maxlength="140">
+          </label>
+          <div class="ed-cols">
+            <fieldset class="pro"><legend>טיעוני בעד</legend><div id="proEd" style="display:grid;gap:10px"></div>
+              <button class="ghost" type="button" data-add="pro" style="justify-self:start">הוספת טיעון בעד</button></fieldset>
+            <fieldset class="con"><legend>טיעוני נגד</legend><div id="conEd" style="display:grid;gap:10px"></div>
+              <button class="ghost" type="button" data-add="con" style="justify-self:start">הוספת טיעון נגד</button></fieldset>
+          </div>
+          <div class="ed-actions">
+            <button class="primary" type="submit">שמירה והצגה בזירה</button>
+            <button class="ghost" type="button" id="restore">חזרה לדילמה לדוגמה</button>
+          </div>
+          <p class="msg" id="msg" role="status"></p>
+        </div>
+      </form>
+    </div>
+  </details>
+
+</div>
+
+<div class="win" id="confirmBox" hidden>
+  <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+    <h2 id="cfTitle"></h2>
+    <p id="cfText"></p>
+    <div class="tools">
+      <button class="primary" id="cfOk" type="button"></button>
+      <button class="ghost" id="cfCancel" type="button">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const KEY = 'debate-arena-v1';
+  const MAX_ARGS = 6;
+  const DEFAULTS = {
+    topic: 'האם להתיר שימוש בבינה מלאכותית בשיעורי בית?',
+    pro: [
+      { t: 'זה כלי שכבר נמצא בעולם האמיתי',
+        r: 'בעבודה ובלימודים הגבוהים משתמשים בכלים האלה כל יום. עדיף שבית הספר ילמד להשתמש בהם בחוכמה ובביקורתיות, במקום להעמיד פנים שהם לא קיימים.',
+        e: 'מהנדסים ועורכי דין נעזרים היום בבינה מלאכותית לסיכום מסמכים ולבדיקת קוד. מי שלמד לבדוק את מה שהכלי מוציא, עושה את העבודה טוב יותר ומהר יותר.' },
+      { t: 'מורה פרטי לכל תלמיד',
+        r: 'תלמיד שנתקע בבית בלי מישהו שיעזור יכול לקבל הסבר נוסף בקצב שלו. כך מצטמצם הפער בין מי שיש לו עזרה בבית לבין מי שאין לו.',
+        e: 'תלמידה שלא הבינה שברים ביקשה מהצ׳אט להסביר שוב בעזרת פיצה שמחולקת למשולשים, ואחר כך פתרה לבד את שאר התרגילים.' },
+      { t: 'יותר זמן לחשיבה, פחות עבודה טכנית',
+        r: 'כשהכלי עוזר בסידור מידע או בטיוטה ראשונה, נשאר יותר זמן לניתוח, להשוואה, לביקורת וליצירתיות.',
+        e: 'בעבודה בהיסטוריה התלמידים קיבלו מהכלי ציר זמן מסודר, והשקיעו את רוב הזמן בהשוואה בין מקורות ובכתיבת עמדה אישית.' }
+    ],
+    con: [
+      { t: 'מי בעצם עשה את העבודה?',
+        r: 'קשה לדעת מה התלמיד הבין בעצמו ומה הכלי כתב בשבילו. הציון כבר לא משקף את הידע והמאמץ של התלמיד.',
+        e: 'חיבור שהוגש מלוטש ומרשים, אבל בשיחה בכיתה התלמיד לא הצליח להסביר אף אחד מהטיעונים שכתב.' },
+      { t: 'שרירי החשיבה נחלשים',
+        r: 'ההתמודדות עם קושי היא חלק מהלמידה עצמה. מי שמדלג על השלב הזה לא מפתח סבלנות, התמדה ויכולת לפתור בעיות לבד.',
+        e: 'כמו מחשבון שמקבלים מוקדם מדי: ילדים שלא תרגלו את לוח הכפל מתקשים אחר כך להעריך אם תוצאה בכלל הגיונית.' },
+      { t: 'מידע שגוי שנשמע משכנע',
+        r: 'הכלים טועים לפעמים וגם ממציאים עובדות ומקורות. תלמידים צעירים עוד לא תמיד יודעים לזהות את זה ולבדוק.',
+        e: 'תלמיד הגיש עבודה עם ציטוט של מנהיג מפורסם שמעולם לא נאמר. הצ׳אט המציא אותו, והוא לא בדק במקור אחר.' }
+    ]
+  };
+
+  const $ = id => document.getElementById(id);
+  const clone = o => JSON.parse(JSON.stringify(o));
+
+  // ---------- שמירה מקומית ----------
+  function fresh(){ const d = clone(DEFAULTS); d.votes = {pro:0, con:0}; d.history = []; d.hide = false; return d; }
+  function load(){
+    try {
+      const s = JSON.parse(localStorage.getItem(KEY));
+      if (s && typeof s.topic === 'string' && Array.isArray(s.pro) && Array.isArray(s.con)){
+        s.votes = s.votes && typeof s.votes === 'object' ? s.votes : {pro:0, con:0};
+        s.votes.pro = Math.max(0, +s.votes.pro || 0); s.votes.con = Math.max(0, +s.votes.con || 0);
+        s.history = Array.isArray(s.history) ? s.history.slice(-200) : [];
+        s.hide = !!s.hide;
+        return s;
+      }
+    } catch(_){}
+    return null;
+  }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(_){} }
+
+  let state = load() || fresh();
+
+  // ---------- כרטיסיות ----------
+  function el(tag, cls, text){
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function makeCard(arg, side, i){
+    const b = el('button', 'card ' + side); b.type = 'button';
+    b.setAttribute('aria-pressed', 'false');
+    const inner = el('span', 'card-inner');
+    const front = el('span', 'face front');
+    front.append(el('span', 'tag', (side === 'pro' ? 'בעד' : 'נגד') + ' · ' + (i + 1)),
+                 el('span', 'claim', arg.t),
+                 el('span', 'hint', 'הקישו להיפוך'));
+    const back = el('span', 'face back');
+    back.setAttribute('aria-hidden', 'true');
+    back.append(el('span', 'lbl', 'הנימוק'), el('span', 'txt', arg.r || 'לא נכתב נימוק.'),
+                el('span', 'lbl', 'דוגמה מהחיים'), el('span', 'txt', arg.e || 'לא נכתבה דוגמה.'));
+    inner.append(front, back); b.append(inner);
+    b.addEventListener('click', () => setFlip(b, !b.classList.contains('flipped')));
+    return b;
+  }
+  function setFlip(card, on){
+    card.classList.toggle('flipped', on);
+    card.setAttribute('aria-pressed', on ? 'true' : 'false');
+    card.querySelector('.front').setAttribute('aria-hidden', on ? 'true' : 'false');
+    card.querySelector('.back').setAttribute('aria-hidden', on ? 'false' : 'true');
+    updateFlipAll();
+  }
+  function renderCards(){
+    $('topic').textContent = state.topic || 'הדילמה שלנו';
+    ['pro','con'].forEach(side => {
+      const box = $(side + 'Cards'); box.innerHTML = '';
+      if (!state[side].length) box.append(el('p', 'empty-col', 'עוד אין טיעונים בעמודה הזו. אפשר להוסיף בפאנל העריכה.'));
+      state[side].forEach((a, i) => box.append(makeCard(a, side, i)));
+    });
+    updateFlipAll();
+  }
+  function allCards(){ return [...document.querySelectorAll('.card')]; }
+  function updateFlipAll(){
+    const cs = allCards();
+    const allOpen = cs.length && cs.every(c => c.classList.contains('flipped'));
+    $('flipAll').textContent = allOpen ? 'החזרת כל הכרטיסיות' : 'הפיכת כל הכרטיסיות';
+  }
+  $('flipAll').addEventListener('click', () => {
+    const cs = allCards();
+    const allOpen = cs.length && cs.every(c => c.classList.contains('flipped'));
+    cs.forEach(c => setFlip(c, !allOpen));
+  });
+
+  // ---------- הצבעה ומד ----------
+  // מחזיר אחוזים שלמים שסכומם 100, או 0 ו־0 כשאין קולות
+  function percents(a, b){
+    const total = a + b;
+    if (total === 0) return {pa:0, pb:0, wa:50, wb:50, total};
+    const pa = Math.round(a / total * 100);
+    return {pa, pb:100 - pa, wa:a / total * 100, wb:b / total * 100, total};
+  }
+  function renderVotes(){
+    const {pro, con} = state.votes;
+    const p = percents(pro, con);
+    $('proBtnNum').textContent = pro; $('conBtnNum').textContent = con;
+    $('proCount').textContent = pro; $('conCount').textContent = con;
+    $('proPct').textContent = p.pa + '%'; $('conPct').textContent = p.pb + '%';
+    const meter = $('meter');
+    meter.classList.toggle('zero', p.total === 0);
+    $('proSeg').style.width = p.wa + '%'; $('conSeg').style.width = p.wb + '%';
+    $('proSeg').textContent = p.total && p.wa >= 14 ? p.pa + '%' : '';
+    $('conSeg').textContent = p.total && p.wb >= 14 ? p.pb + '%' : '';
+    meter.setAttribute('aria-label', state.hide ? 'התוצאות מוסתרות' :
+      'מד הסכמה: ' + p.pa + ' אחוז נוטים להסכים, ' + p.pb + ' אחוז נוטים להתנגד');
+    let s;
+    if (p.total === 0) s = 'עוד אין הצבעות. לחצו על אחד הכפתורים כדי להתחיל.';
+    else if (state.hide) s = 'הצביעו עד כה: ' + p.total + '. התוצאות מוסתרות.';
+    else if (pro === con) s = 'תיקו! ' + p.total + ' משתתפים, הקבוצה חלוקה בדיוק באמצע.';
+    else s = 'הצביעו ' + p.total + ' משתתפים. רוב הקבוצה ' + (pro > con ? 'נוטה להסכים.' : 'נוטה להתנגד.');
+    $('status').textContent = s;
+    $('voteArea').classList.toggle('results-hidden', state.hide);
+    $('hideRes').textContent = state.hide ? 'הצגת התוצאות' : 'הסתרת התוצאות בזמן ההצבעה';
+    $('hideRes').setAttribute('aria-pressed', state.hide ? 'true' : 'false');
+    $('undo').disabled = !state.history.length;
+    $('undo').style.opacity = state.history.length ? '' : '.45';
+  }
+  function change(side, d){
+    const before = state.votes[side];
+    const after = Math.max(0, before + d);
+    if (after === before) return false;
+    state.votes[side] = after;
+    state.history.push({side, d: after - before});
+    if (state.history.length > 200) state.history.shift();
+    save(); renderVotes(); return true;
+  }
+
+  let lastTap = 0;
+  function tapVote(side, btn){
+    const now = Date.now();
+    if (now - lastTap < 350) return; // מונע לחיצה כפולה בטעות
+    lastTap = now;
+    change(side, 1);
+    btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
+    const plus = el('span', 'plus', '+1'); btn.append(plus);
+    setTimeout(() => plus.remove(), 850);
+    try { if (navigator.vibrate) navigator.vibrate(25); } catch(_){}
+  }
+  $('votePro').addEventListener('click', e => tapVote('pro', e.currentTarget));
+  $('voteCon').addEventListener('click', e => tapVote('con', e.currentTarget));
+  document.querySelectorAll('.step').forEach(b =>
+    b.addEventListener('click', () => change(b.dataset.side, +b.dataset.d)));
+
+  $('undo').addEventListener('click', () => {
+    const h = state.history.pop(); if (!h) return;
+    state.votes[h.side] = Math.max(0, state.votes[h.side] - h.d);
+    save(); renderVotes();
+  });
+  $('hideRes').addEventListener('click', () => { state.hide = !state.hide; save(); renderVotes(); });
+  $('resetVotes').addEventListener('click', () => {
+    if (!state.votes.pro && !state.votes.con) return;
+    ask('לאפס את ההצבעה?', 'כל הקולות יימחקו והמד יחזור להתחלה.', 'כן, לאפס', () => {
+      state.votes = {pro:0, con:0}; state.history = []; save(); renderVotes();
+    });
+  });
+
+  // ---------- חלון אישור בתוך הדף ----------
+  let cfAction = null, cfReturn = null;
+  function ask(title, text, okLabel, action){
+    cfAction = action; cfReturn = document.activeElement;
+    $('cfTitle').textContent = title; $('cfText').textContent = text; $('cfOk').textContent = okLabel;
+    $('confirmBox').hidden = false; $('cfCancel').focus();
+  }
+  function closeAsk(){ $('confirmBox').hidden = true; cfAction = null; if (cfReturn && cfReturn.focus) cfReturn.focus(); }
+  $('cfOk').addEventListener('click', () => { const a = cfAction; closeAsk(); if (a) a(); });
+  $('cfCancel').addEventListener('click', closeAsk);
+  $('confirmBox').addEventListener('click', e => { if (e.target === e.currentTarget) closeAsk(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('confirmBox').hidden) closeAsk(); });
+
+  // ---------- פאנל עריכה ----------
+  function argRow(side, a, i){
+    const box = el('div', 'arg');
+    const top = el('div', 'arg-top');
+    top.append(el('span', '', (side === 'pro' ? 'בעד ' : 'נגד ') + (i + 1)));
+    const rm = el('button', 'rm', 'הסרה'); rm.type = 'button';
+    rm.addEventListener('click', () => { box.remove(); renumber(side); });
+    top.append(rm);
+    const mk = (label, name, val, multi) => {
+      const l = el('label', '', label);
+      const f = document.createElement(multi ? 'textarea' : 'input');
+      if (!multi){ f.type = 'text'; f.maxLength = 90; }
+      f.dataset.f = name; f.value = val || '';
+      l.append(f); return l;
+    };
+    box.append(top, mk('הטיעון (על הכרטיסייה)', 't', a.t, false),
+               mk('נימוק', 'r', a.r, true), mk('דוגמה מהחיים', 'e', a.e, true));
+    return box;
+  }
+  function renumber(side){
+    [...$(side + 'Ed').children].forEach((b, i) =>
+      b.querySelector('.arg-top span').textContent = (side === 'pro' ? 'בעד ' : 'נגד ') + (i + 1));
+  }
+  function buildEditor(){
+    $('topicIn').value = state.topic;
+    ['pro','con'].forEach(side => {
+      const box = $(side + 'Ed'); box.innerHTML = '';
+      state[side].forEach((a, i) => box.append(argRow(side, a, i)));
+    });
+  }
+  document.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
+    const side = b.dataset.add, box = $(side + 'Ed');
+    if (box.children.length >= MAX_ARGS){ $('msg').textContent = 'אפשר עד ' + MAX_ARGS + ' טיעונים לכל צד.'; return; }
+    const row = argRow(side, {t:'', r:'', e:''}, box.children.length);
+    box.append(row); row.querySelector('input').focus();
+  }));
+  function readSide(side){
+    return [...$(side + 'Ed').children].map(b => {
+      const g = n => b.querySelector('[data-f="' + n + '"]').value.trim();
+      return {t:g('t'), r:g('r'), e:g('e')};
+    }).filter(a => a.t).slice(0, MAX_ARGS);
+  }
+  $('editForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const topic = $('topicIn').value.trim();
+    if (!topic){ $('msg').textContent = 'כתבו את הדילמה לפני השמירה.'; $('topicIn').focus(); return; }
+    const pro = readSide('pro'), con = readSide('con');
+    if (!pro.length && !con.length){ $('msg').textContent = 'הוסיפו לפחות טיעון אחד עם משפט על הכרטיסייה.'; return; }
+    const topicChanged = topic !== state.topic;
+    const hadVotes = state.votes.pro + state.votes.con > 0;
+    state.topic = topic; state.pro = pro; state.con = con;
+    if (topicChanged){ state.votes = {pro:0, con:0}; state.history = []; }
+    save(); renderCards(); renderVotes(); buildEditor();
+    $('msg').textContent = 'נשמר. הזירה מעודכנת' + (topicChanged && hadVotes ? ', וההצבעה אופסה לדילמה החדשה.' : '.');
+    window.scrollTo({top:0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  });
+  $('restore').addEventListener('click', () => {
+    ask('לחזור לדילמה לדוגמה?', 'הדילמה והטיעונים שכתבתם יוחלפו בדוגמה, וההצבעה תתאפס.', 'כן, לחזור לדוגמה', () => {
+      const hide = state.hide; state = fresh(); state.hide = hide;
+      save(); renderCards(); renderVotes(); buildEditor();
+      $('msg').textContent = 'הדילמה לדוגמה חזרה לזירה.';
+    });
+  });
+
+  renderCards(); renderVotes(); buildEditor();
+})();
+</script>
+</body>
+</html>

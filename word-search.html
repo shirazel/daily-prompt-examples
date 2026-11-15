@@ -7,31 +7,32 @@
 <title>תפזורת חנוכה</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Secular+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Varela+Round&display=swap">
 <style>
 /* Layout: לוח אותיות גדול כמו דף עבודה, ולצידו כרטיס "מילים למציאה" עם שעון; עורך המילים למטה */
 :root{
-  --bg:#f6fbfc; --paper:#ffffff; --ink:#16324a; --muted:#5b6f80;
-  --teal:#18a7b5; --teal-soft:#dff3f5; --blue:#1f5fa8; --marker:#ffd23f; --cta:#f7931e;
-  --line:#d5e6ea; --found-text:#9aa9b5;
-  --hl1:rgba(24,167,181,.35); --hl2:rgba(247,147,30,.35); --hl3:rgba(31,95,168,.30); --hl4:rgba(255,210,63,.55); --hl5:rgba(214,84,140,.30);
-  --sel:rgba(255,210,63,.65);
-  --display:"Secular One","Assistant","Heebo",sans-serif;
-  --body:"Assistant","Heebo",system-ui,sans-serif;
+  --bg:#f3f5fb; --paper:#ffffff; --ink:#1d2340; --muted:#5d6482;
+  --teal:#5b5bd6; --teal-soft:#eceefb; --blue:#4646c4; --marker:rgba(255,196,0,.45); --cta:#5b5bd6; --cta-hover:#4646c4; --cta-ink:#ffffff;
+  --line:#dde1ef; --found-text:#9aa0b8; --gold:#f5a524;
+  --hl1:rgba(91,91,214,.32); --hl2:rgba(255,99,132,.32); --hl3:rgba(16,185,129,.32); --hl4:rgba(245,165,36,.4); --hl5:rgba(14,165,233,.32);
+  --sel:rgba(255,196,0,.55);
+  --display:"Varela Round","Heebo","Segoe UI",Arial,sans-serif;
+  --body:"Heebo","Segoe UI",Arial,sans-serif;
+  --mono:"Varela Round","Heebo","Segoe UI",Arial,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0f1b26; --paper:#162635; --ink:#e8f1f6; --muted:#9fb3c2;
-  --teal:#3cc4d0; --teal-soft:#173a44; --blue:#7fb0ec; --marker:#ffd23f; --cta:#ffa443;
-  --line:#26394a; --found-text:#5f7484;
-  --hl1:rgba(60,196,208,.38); --hl2:rgba(255,164,67,.38); --hl3:rgba(127,176,236,.35); --hl4:rgba(255,210,63,.40); --hl5:rgba(232,120,170,.38);
-  --sel:rgba(255,210,63,.45); color-scheme:dark } }
+  --bg:#121528; --paper:#1b1f38; --ink:#eef0fb; --muted:#a7add0;
+  --teal:#8b8bf0; --teal-soft:#23284a; --blue:#a5a5f5; --marker:rgba(255,196,0,.35); --cta:#8b8bf0; --cta-hover:#a5a5f5; --cta-ink:#121528;
+  --line:#2c3256; --found-text:#6e7499; --gold:#f5b94a;
+  --hl1:rgba(139,139,240,.4); --hl2:rgba(255,120,150,.38); --hl3:rgba(52,211,153,.36); --hl4:rgba(245,185,74,.4); --hl5:rgba(56,189,248,.36);
+  --sel:rgba(255,196,0,.42); color-scheme:dark } }
 :root[data-theme="dark"]{
-  --bg:#0f1b26; --paper:#162635; --ink:#e8f1f6; --muted:#9fb3c2;
-  --teal:#3cc4d0; --teal-soft:#173a44; --blue:#7fb0ec; --marker:#ffd23f; --cta:#ffa443;
-  --line:#26394a; --found-text:#5f7484;
-  --hl1:rgba(60,196,208,.38); --hl2:rgba(255,164,67,.38); --hl3:rgba(127,176,236,.35); --hl4:rgba(255,210,63,.40); --hl5:rgba(232,120,170,.38);
-  --sel:rgba(255,210,63,.45); color-scheme:dark }
+  --bg:#121528; --paper:#1b1f38; --ink:#eef0fb; --muted:#a7add0;
+  --teal:#8b8bf0; --teal-soft:#23284a; --blue:#a5a5f5; --marker:rgba(255,196,0,.35); --cta:#8b8bf0; --cta-hover:#a5a5f5; --cta-ink:#121528;
+  --line:#2c3256; --found-text:#6e7499; --gold:#f5b94a;
+  --hl1:rgba(139,139,240,.4); --hl2:rgba(255,120,150,.38); --hl3:rgba(52,211,153,.36); --hl4:rgba(245,185,74,.4); --hl5:rgba(56,189,248,.36);
+  --sel:rgba(255,196,0,.42); color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -39,7 +40,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17p
 .wrap{max-width:1040px;margin:0 auto;padding-block:24px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
 
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
-h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);line-height:1.1;margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1.1;margin:0;text-wrap:balance}
 h1 mark{background:linear-gradient(transparent 55%,var(--marker) 55%);color:inherit;padding:0 4px}
 .sub{margin:4px 0 0;color:var(--muted)}
 
@@ -56,7 +57,7 @@ svg.marks line{stroke-linecap:round}
 
 .side{display:grid;gap:14px}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-.panel h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0 0 8px;color:var(--blue)}
+.panel h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0 0 8px;color:var(--blue)}
 .words{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
 .words li{font-size:19px;font-weight:600;position:relative;width:max-content;max-width:100%;transition:color .3s}
 .words li.found{color:var(--found-text)}
@@ -64,37 +65,32 @@ svg.marks line{stroke-linecap:round}
 .progress{margin:10px 0 0;color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums}
 
 .clock{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.time{font-family:var(--display);font-size:34px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.time{font-family:var(--mono);font-weight:700;font-size:34px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .time.hidden-time{color:transparent;text-shadow:0 0 14px var(--muted)}
 .ghost{font:inherit;font-size:15px;font-weight:600;color:var(--blue);background:transparent;border:1.5px solid var(--blue);border-radius:999px;padding:5px 14px;cursor:pointer}
 .ghost:focus-visible,.cta:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
 
 .editor{background:var(--teal-soft);border-radius:18px;padding:18px;display:grid;gap:12px}
-.editor h2{font-family:var(--display);font-weight:400;font-size:24px;margin:0}
+.editor h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0}
 .editor p{margin:0;color:var(--muted);font-size:15px}
 .fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:12px;align-items:end}
 @media (max-width:820px){.fields{grid-template-columns:1fr}}
 label{display:grid;gap:4px;font-weight:700;font-size:15px}
 input,textarea{font:inherit;font-size:17px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;width:100%}
 textarea{min-height:46px;height:46px;resize:vertical}
-.cta{font:inherit;font-weight:800;font-size:17px;color:#2a1600;background:var(--cta);border:0;border-radius:12px;padding:11px 22px;cursor:pointer;white-space:nowrap}
-.cta:hover{filter:brightness(1.05)}
+.cta{font:inherit;font-weight:700;font-size:17px;color:var(--cta-ink);background:var(--cta);border:0;border-radius:999px;padding:11px 22px;cursor:pointer;white-space:nowrap}
+.cta:hover{background:var(--cta-hover)}
 .msg{min-height:1.4em;font-size:15px;color:var(--blue);font-weight:600}
 
 .win{position:fixed;inset:0;display:grid;place-items:center;background:rgba(10,25,40,.45);z-index:20;padding:16px}
 .win-card{background:var(--paper);color:var(--ink);border-radius:20px;padding:26px 30px;text-align:center;max-width:380px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-.win-card h2{font-family:var(--display);font-weight:400;font-size:32px;margin:0}
-.stars{font-size:40px;letter-spacing:6px;margin:6px 0;color:var(--marker);-webkit-text-stroke:1px #c99a00}
+.win-card h2{font-family:var(--display);font-weight:900;font-size:32px;margin:0}
+.stars{font-size:40px;letter-spacing:6px;margin:6px 0;color:var(--gold)}
 .stars .off{color:var(--line);-webkit-text-stroke:0}
 .win-card p{margin:4px 0 16px;font-variant-numeric:tabular-nums}
 canvas.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
 
-.signature{direction:rtl;text-align:center;font-size:12px;line-height:1.8;padding:18px 12px;margin-top:16px;opacity:.72;color:var(--muted);border-top:1px solid var(--line)}
-.signature .sig-links{display:block}
-.signature a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
-.signature .sig-sep{margin:0 6px;opacity:.5}
-@media (max-width:480px){.signature{font-size:11px}.signature .sig-sep{display:none}.signature a{display:block;margin:3px auto;width:max-content}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
@@ -144,17 +140,6 @@ canvas.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
     </form>
     <div class="msg" id="msg" role="status"></div>
   </section>
-
-  <footer class="signature">
-    <span class="sig-name">© שירה רוט זליקוביץ · הוראה יצירתית עם AI</span>
-    <span class="sig-links">
-      <a href="https://wa.me/972523930628" target="_blank" rel="noopener">ווטסאפ</a>
-      <span class="sig-sep">·</span>
-      <a href="https://www.lomdot.org/" target="_blank" rel="noopener">האתר שלי</a>
-      <span class="sig-sep">·</span>
-      <a href="https://www.lomdot.org/" target="_blank" rel="noopener">להזמנת סדנאות בינה מלאכותית</a>
-    </span>
-  </footer>
 </div>
 
 <div class="win" id="win" hidden>
@@ -353,7 +338,7 @@ canvas.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
     const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
     cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.scale(dpr,dpr);
     const cs = getComputedStyle(document.documentElement);
-    const cols = ['--teal','--cta','--marker','--blue'].map(v => cs.getPropertyValue(v).trim());
+    const cols = ['--teal','--gold','--hl3','--hl4'].map(v => cs.getPropertyValue(v).trim());
     const ps = Array.from({length:160}, () => ({ x:Math.random()*innerWidth, y:-20-Math.random()*innerHeight*0.5,
       vx:(Math.random()-.5)*3, vy:2+Math.random()*3, s:6+Math.random()*6, a:Math.random()*6, va:(Math.random()-.5)*.3,
       c:cols[Math.floor(Math.random()*cols.length)] }));

@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}</style>
+<title>סטודיו תעודות הוקרה</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700;900&family=Heebo:wght@400;500;600;700;800;900&family=Varela+Round&display=swap">
+<style>
+/* Layout: סטודיו שקט: התעודה גדולה במרכז על משטח עבודה, ולצידה פאנל עריכה עם שדות, בחירת סגנון וכפתורי ייצוא */
+:root{
+  --desk:#f1eee8; --card:#ffffff; --well:#e6e1d8; --field:#fbfaf7;
+  --text:#1f2430; --text-2:#5d6574; --text-3:#8d93a0;
+  --border:#dcd6cb; --border-2:#c4bdb0;
+  --accent:#23395d; --accent-hover:#162742; --accent-ink:#ffffff; --accent-tint:rgba(35,57,93,.08);
+  --gilt:#a8843a; --gilt-tint:rgba(168,132,58,.12);
+  --drop:rgba(30,26,20,.16);
+  --head:"Heebo","Segoe UI",Arial,sans-serif;
+  --sans:"Heebo","Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --desk:#15181f; --card:#1e222b; --well:#262b36; --field:#191d25;
+  --text:#eceae4; --text-2:#b4b8c2; --text-3:#7e8492;
+  --border:#323845; --border-2:#454c5b;
+  --accent:#9db8e6; --accent-hover:#bcd0f2; --accent-ink:#121722; --accent-tint:rgba(157,184,230,.12);
+  --gilt:#d8b468; --gilt-tint:rgba(216,180,104,.14);
+  --drop:rgba(0,0,0,.5); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --desk:#15181f; --card:#1e222b; --well:#262b36; --field:#191d25;
+  --text:#eceae4; --text-2:#b4b8c2; --text-3:#7e8492;
+  --border:#323845; --border-2:#454c5b;
+  --accent:#9db8e6; --accent-hover:#bcd0f2; --accent-ink:#121722; --accent-tint:rgba(157,184,230,.12);
+  --gilt:#d8b468; --gilt-tint:rgba(216,180,104,.14);
+  --drop:rgba(0,0,0,.5); color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--desk);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;direction:rtl}
+:focus-visible{outline:2px solid var(--gilt);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+
+header{display:grid;gap:6px}
+h1{font-family:var(--head);font-weight:900;font-size:clamp(30px,5vw,46px);line-height:1.1;margin:0;text-wrap:balance}
+h1 span{color:var(--gilt)}
+.sub{margin:0;color:var(--text-2);max-width:64ch}
+
+.studio{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:900px){.studio{grid-template-columns:1fr}}
+
+.stage{background:var(--well);border-radius:18px;padding:clamp(10px,2.6vw,28px);position:sticky;top:16px}
+@media (max-width:900px){.stage{position:static}}
+.stage canvas{display:block;width:100%;aspect-ratio:1123/794;height:auto;border-radius:3px;box-shadow:0 14px 34px var(--drop),0 2px 6px var(--drop);background:#fff}
+
+.side{display:grid;gap:14px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:grid;gap:12px}
+.panel h2{font-family:var(--head);font-weight:800;font-size:21px;margin:0}
+label{display:grid;gap:4px;font-weight:500;font-size:14.5px;color:var(--text-2)}
+input,textarea{font:inherit;font-size:16px;font-weight:400;color:var(--text);background:var(--field);border:1px solid var(--border-2);border-radius:10px;padding:8px 12px;width:100%;min-width:0}
+input:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:92px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.row2{grid-template-columns:1fr}}
+.hint{font-size:13px;color:var(--text-3);font-weight:400}
+
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border:0;margin:0;padding:0}
+.themes legend{font-weight:500;font-size:14.5px;color:var(--text-2);margin-bottom:6px;padding:0}
+.theme{position:relative;display:grid;gap:6px;justify-items:center;text-align:center;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;border:1px solid var(--border-2);border-radius:12px;padding:8px 6px;background:var(--field)}
+.theme input{position:absolute;opacity:0;pointer-events:none}
+.theme .sw{width:100%;aspect-ratio:1.414;border-radius:4px;border:1px solid rgba(0,0,0,.08)}
+.theme:has(input:checked){border-color:var(--gilt);background:var(--gilt-tint);box-shadow:0 0 0 1.5px var(--gilt)}
+.theme:has(input:focus-visible){outline:2px solid var(--gilt);outline-offset:3px}
+.sw.gold{background:radial-gradient(circle at 50% 78%,#d9b558 0 14%,transparent 15%),#fbf5e6;box-shadow:inset 0 0 0 4px #fbf5e6,inset 0 0 0 6px #c49a3a}
+.sw.modern{background:linear-gradient(to left,#1f3a5f 0 9%,#18a7b5 9% 12%,#fff 12%)}
+.sw.festive{background:radial-gradient(circle at 20% 25%,#ff5d8f 0 6%,transparent 7%),radial-gradient(circle at 78% 30%,#ffc233 0 6%,transparent 7%),radial-gradient(circle at 60% 75%,#2ec4b6 0 6%,transparent 7%),radial-gradient(circle at 30% 70%,#7b61ff 0 5%,transparent 6%),#fffaf0;box-shadow:inset 0 0 0 4px #ff9f1c}
+
+.actions{display:grid;gap:10px}
+.cta{font:inherit;font-weight:600;font-size:17px;color:var(--accent-ink);background:var(--accent);border:0;border-radius:12px;padding:12px 22px;cursor:pointer;width:100%;transition:background .2s}
+.cta:hover{background:var(--accent-hover)}
+.cta[disabled]{opacity:.6;cursor:wait}
+.ghost{font:inherit;font-size:16px;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:12px;padding:9px 16px;cursor:pointer;transition:background .2s}
+.ghost:hover{background:var(--accent-tint)}
+.ghost.small{font-size:13.5px;padding:4px 12px;border-radius:999px;color:var(--text-2);border-color:var(--border-2)}
+.msg{min-height:1.4em;font-size:14.5px;color:var(--text-2);margin:0}
+.reset{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--text-2)}
+
+#printArea{display:none}
+
+@media (max-width:480px){@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  html,body{background:#fff!important;margin:0;padding:0}
+  .wrap,  #printArea{display:block!important;width:297mm;height:210mm;overflow:hidden;page-break-after:avoid;break-after:avoid}
+  #printArea img{display:block;width:297mm;height:210mm;max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>סטודיו <span>תעודות הוקרה</span> וסיום</h1>
+      <p class="sub">כתבו בצד את הפרטים, והתעודה מתעדכנת מיד. אפשר להוריד אותה כתמונה איכותית או להדפיס אותה נקייה על דף A4.</p>
+    </div>
+  </header>
+
+  <section class="studio">
+    <div class="stage">
+      <canvas id="preview" dir="rtl" aria-label="תצוגה מקדימה של התעודה" role="img"></canvas>
+    </div>
+
+    <aside class="side">
+      <form class="panel" id="form" autocomplete="off">
+        <h2>פרטי התעודה</h2>
+        <label for="fTitle">כותרת התעודה
+          <input id="fTitle" name="title" type="text" maxlength="40">
+        </label>
+        <label for="fName">שם המקבל או המקבלת
+          <input id="fName" name="name" type="text" maxlength="40">
+        </label>
+        <label for="fFor">על מה מוענקת התעודה
+          <textarea id="fFor" name="achievement" maxlength="220"></textarea>
+          <span class="hint">עד שלוש שורות על התעודה. טקסט ארוך יוקטן מעט כדי להיכנס.</span>
+        </label>
+        <div class="row2">
+          <label for="fSigner">שם החותם
+            <input id="fSigner" name="signer" type="text" maxlength="30">
+          </label>
+          <label for="fRole">תפקיד
+            <input id="fRole" name="role" type="text" maxlength="40">
+          </label>
+        </div>
+        <label for="fDate">תאריך
+          <input id="fDate" name="date" type="date">
+        </label>
+
+        <fieldset class="themes">
+          <legend>סגנון עיצוב</legend>
+          <label class="theme"><input type="radio" name="theme" value="gold"><span class="sw gold"></span>זהב קלאסי</label>
+          <label class="theme"><input type="radio" name="theme" value="modern"><span class="sw modern"></span>מודרני נקי</label>
+          <label class="theme"><input type="radio" name="theme" value="festive"><span class="sw festive"></span>צבעוני חגיגי</label>
+        </fieldset>
+      </form>
+
+      <div class="panel actions">
+        <button class="cta" id="download" type="button">הורד תעודה כתמונה</button>
+        <button class="ghost" id="print" type="button">הדפסה נקייה</button>
+        <p class="msg" id="msg" role="status"></p>
+        <div class="reset">
+          <button class="ghost small" id="resetAsk" type="button">חזרה לתעודה לדוגמה</button>
+          <span id="resetConfirm" hidden>הטקסטים שלכם יימחקו. להמשיך?
+            <button class="ghost small" id="resetYes" type="button">כן, לאפס</button>
+            <button class="ghost small" id="resetNo" type="button">ביטול</button>
+          </span>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+</div>
+
+<div id="printArea"><img id="printImg" alt="תעודה להדפסה"></div>
+
+<script>
+(() => {
+  const W = 1123, H = 794;               // יחידות לוגיות: A4 שוכב
+  const PRINT_W = 3508, PRINT_H = 2480;  // 300dpi
+  const KEY = 'certificate-studio-v1';
+
+  const today = new Date();
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  const SAMPLE = {
+    title: 'תעודת הצטיינות',
+    name: 'נועה כהן',
+    achievement: 'התמדה, סקרנות ותרומה יוצאת דופן לאווירת הלמידה בכיתה, ועל העזרה הנדיבה לחברים ולחברות לאורך מחצית א׳ של שנת הלימודים תשפ״ז',
+    signer: 'רונית לוי',
+    role: 'מחנכת כיתה ו׳2',
+    date: iso(today),
+    theme: 'gold'
+  };
+
+  const form = document.getElementById('form');
+  const canvas = document.getElementById('preview');
+  const msg = document.getElementById('msg');
+  const F = {
+    title: document.getElementById('fTitle'), name: document.getElementById('fName'),
+    achievement: document.getElementById('fFor'), signer: document.getElementById('fSigner'),
+    role: document.getElementById('fRole'), date: document.getElementById('fDate')
+  };
+
+  // ---------- נתונים ושמירה ----------
+  function load(){
+    try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') return Object.assign({}, SAMPLE, s); } catch(_){}
+    return Object.assign({}, SAMPLE);
+  }
+  function save(d){ try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(_){} }
+  function fill(d){
+    Object.keys(F).forEach(k => { F[k].value = d[k] || ''; });
+    const r = form.querySelector('input[name="theme"][value="' + d.theme + '"]') || form.querySelector('input[name="theme"]');
+    r.checked = true;
+  }
+  function read(){
+    const d = {};
+    Object.keys(F).forEach(k => { d[k] = F[k].value.trim(); });
+    const t = form.querySelector('input[name="theme"]:checked');
+    d.theme = t ? t.value : 'gold';
+    return d;
+  }
+  function hebDate(v){
+    if (!v) return '';
+    const [y,m,dd] = v.split('-').map(Number);
+    const d = new Date(y, m-1, dd);
+    try { return new Intl.DateTimeFormat('he-IL', {day:'numeric', month:'long', year:'numeric'}).format(d); }
+    catch(_){ return dd + '.' + m + '.' + y; }
+  }
+
+  // ---------- עיצובים ----------
+  const THEMES = {
+    gold: {
+      bg:'#fbf5e6', ink:'#3d2f1a', soft:'#7a6440', accent:'#a77d22',
+      title:'900 FONT "Frank Ruhl Libre", serif', name:'700 FONT "Frank Ruhl Libre", serif',
+      text:'400 FONT "Frank Ruhl Libre", serif', sign:'700 FONT "Frank Ruhl Libre", serif'
+    },
+    modern: {
+      bg:'#ffffff', ink:'#16324a', soft:'#5b6f80', accent:'#18a7b5', navy:'#1f3a5f',
+      title:'800 FONT "Heebo", sans-serif', name:'700 FONT "Heebo", sans-serif',
+      text:'400 FONT "Heebo", sans-serif', sign:'700 FONT "Heebo", sans-serif'
+    },
+    festive: {
+      bg:'#fffaf0', ink:'#2b2140', soft:'#6b5a7a', accent:'#e63e6d',
+      colors:['#ff5d8f','#ff9f1c','#ffc233','#2ec4b6','#3a86ff','#7b61ff'],
+      title:'400 FONT "Varela Round", sans-serif', name:'400 FONT "Varela Round", sans-serif',
+      text:'400 FONT "Varela Round", sans-serif', sign:'400 FONT "Varela Round", sans-serif'
+    }
+  };
+  const font = (tpl, px) => tpl.replace('FONT', px + 'px');
+
+  function goldGrad(ctx, x0, y0, x1, y1){
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, '#9c7420'); g.addColorStop(.3, '#e6c66a'); g.addColorStop(.5, '#b8892b');
+    g.addColorStop(.72, '#f0d88a'); g.addColorStop(1, '#8e6a1c');
+    return g;
+  }
+  function rand(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  // ---------- מסגרות ----------
+  function goldCorner(ctx, x, y, sx, sy){
+    ctx.save(); ctx.translate(x, y); ctx.scale(sx, sy);
+    ctx.strokeStyle = goldGrad(ctx, 0, 0, 120, 120); ctx.fillStyle = '#b8892b';
+    ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(0, 78); ctx.lineTo(0, 0); ctx.lineTo(78, 0); ctx.stroke();
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(14, 104); ctx.bezierCurveTo(14, 44, 44, 14, 104, 14);
+    ctx.bezierCurveTo(126, 14, 134, 34, 118, 41); ctx.bezierCurveTo(106, 46, 101, 34, 110, 31);
+    ctx.moveTo(14, 104); ctx.bezierCurveTo(14, 126, 34, 134, 41, 118); ctx.bezierCurveTo(46, 106, 34, 101, 31, 110);
+    ctx.stroke();
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(26, 70); ctx.bezierCurveTo(26, 44, 44, 26, 70, 26); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(30, 22); ctx.lineTo(38, 30); ctx.lineTo(30, 38); ctx.lineTo(22, 30); ctx.closePath(); ctx.fill();
+    [[136, 14], [14, 136]].forEach(([cx, cy]) => { ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI*2); ctx.fill(); });
+    ctx.restore();
+  }
+  function frameGold(ctx){
+    const t = THEMES.gold;
+    ctx.fillStyle = t.bg; ctx.fillRect(0, 0, W, H);
+    const v = ctx.createRadialGradient(W/2, H/2, 200, W/2, H/2, 720);
+    v.addColorStop(0, 'rgba(255,255,255,0)'); v.addColorStop(1, 'rgba(196,154,58,.16)');
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+    // סימן מים עדין
+    ctx.save(); ctx.globalAlpha = .06; ctx.strokeStyle = '#a77d22'; ctx.lineWidth = 1.2;
+    for (let i = 0; i < 18; i++){ ctx.beginPath(); ctx.ellipse(W/2, H/2 + 10, 230, 120, i * Math.PI / 18, 0, Math.PI*2); ctx.stroke(); }
+    ctx.restore();
+    ctx.lineJoin = 'miter';
+    ctx.strokeStyle = goldGrad(ctx, 0, 0, W, H); ctx.lineWidth = 7; ctx.strokeRect(22, 22, W-44, H-44);
+    ctx.lineWidth = 1.6; ctx.strokeRect(36, 36, W-72, H-72);
+    ctx.lineWidth = 1; ctx.strokeRect(42, 42, W-84, H-84);
+    const m = 50;
+    goldCorner(ctx, m, m, 1, 1); goldCorner(ctx, W-m, m, -1, 1);
+    goldCorner(ctx, m, H-m, 1, -1); goldCorner(ctx, W-m, H-m, -1, -1);
+  }
+  function frameModern(ctx){
+    const t = THEMES.modern;
+    ctx.fillStyle = t.bg; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = t.navy; ctx.fillRect(W-64, 0, 64, H);
+    ctx.fillStyle = t.accent; ctx.fillRect(W-76, 0, 8, H);
+    ctx.fillStyle = 'rgba(24,167,181,.08)';
+    ctx.beginPath(); ctx.arc(70, H-60, 210, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#d9e2ea'; ctx.lineWidth = 1.5; ctx.strokeRect(34, 34, W-140, H-68);
+  }
+  function frameFestive(ctx){
+    const t = THEMES.festive;
+    ctx.fillStyle = t.bg; ctx.fillRect(0, 0, W, H);
+    // פס צבעוני מסביב
+    const seg = 34, inset = 20, bw = 12;
+    let i = 0;
+    for (let x = inset; x < W - inset; x += seg, i++){
+      ctx.fillStyle = t.colors[i % 6];
+      ctx.fillRect(x, inset, Math.min(seg, W-inset-x), bw);
+      ctx.fillRect(x, H-inset-bw, Math.min(seg, W-inset-x), bw);
+    }
+    i = 3;
+    for (let y = inset; y < H - inset; y += seg, i++){
+      ctx.fillStyle = t.colors[i % 6];
+      ctx.fillRect(inset, y, bw, Math.min(seg, H-inset-y));
+      ctx.fillRect(W-inset-bw, y, bw, Math.min(seg, H-inset-y));
+    }
+    ctx.strokeStyle = '#ffd6a5'; ctx.lineWidth = 2; ctx.setLineDash([2, 8]); ctx.lineCap = 'round';
+    ctx.strokeRect(46, 46, W-92, H-92); ctx.setLineDash([]);
+    // קונפטי קבוע בשוליים
+    const r = rand(77);
+    for (let n = 0; n < 70; n++){
+      let x = 60 + r() * (W-120), y = 60 + r() * (H-120);
+      const inCenter = x > 170 && x < W-170 && y > 110 && y < H-110;
+      if (inCenter) continue;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(r() * Math.PI); ctx.fillStyle = t.colors[Math.floor(r()*6)];
+      ctx.globalAlpha = .85;
+      const k = r();
+      if (k < .4){ ctx.fillRect(-7, -3, 14, 6); }
+      else if (k < .75){ ctx.beginPath(); ctx.arc(0, 0, 4 + r()*3, 0, Math.PI*2); ctx.fill(); }
+      else { star(ctx, 0, 0, 5, 9, 4); ctx.fill(); }
+      ctx.restore();
+    }
+    // סרפנטינות בפינות
+    ctx.lineWidth = 3;
+    [[90, 80, 1], [W-90, 80, -1]].forEach(([x, y, s], j) => {
+      ctx.strokeStyle = t.colors[(j*2+1) % 6];
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x + 30*s, y + 10, x + 10*s, y + 40, x + 40*s, y + 50);
+      ctx.bezierCurveTo(x + 70*s, y + 60, x + 50*s, y + 90, x + 80*s, y + 96); ctx.stroke();
+    });
+  }
+  function star(ctx, cx, cy, spikes, outer, inner){
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++){
+      const rr = i % 2 ? inner : outer, a = -Math.PI/2 + i * Math.PI / spikes;
+      ctx[i ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+    }
+    ctx.closePath();
+  }
+
+  // ---------- מדליה מוטבעת ----------
+  function medal(ctx, cx, cy, R, theme, k){
+    const pal = theme === 'gold'
+      ? {rib:['#8e1b2c','#b5283d'], edge:null, face1:'#f6e3a0', face2:'#b8892b', ring:'#8e6a1c', star:'#9c7420'}
+      : theme === 'modern'
+      ? {rib:['#1f3a5f','#18a7b5'], edge:'#1f3a5f', face1:'#2a5a8c', face2:'#1f3a5f', ring:'#18a7b5', star:'#ffffff'}
+      : {rib:['#e63e6d','#3a86ff'], edge:'#ff9f1c', face1:'#ffe08a', face2:'#ff9f1c', ring:'#e63e6d', star:'#e63e6d'};
+    // סרטים
+    [[-1, pal.rib[0]], [1, pal.rib[1]]].forEach(([s, c]) => {
+      ctx.fillStyle = c; ctx.beginPath();
+      ctx.moveTo(cx + s*R*0.15, cy + R*0.3);
+      ctx.lineTo(cx + s*R*0.75, cy + R*1.75);
+      ctx.lineTo(cx + s*R*0.5, cy + R*1.55);
+      ctx.lineTo(cx + s*R*0.28, cy + R*1.85);
+      ctx.lineTo(cx - s*R*0.25, cy + R*0.4);
+      ctx.closePath(); ctx.fill();
+    });
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,.28)'; ctx.shadowBlur = 10 * k; ctx.shadowOffsetY = 3 * k;
+    // שוליים משוננים
+    const teeth = 32;
+    ctx.beginPath();
+    for (let i = 0; i < teeth * 2; i++){
+      const rr = i % 2 ? R * 0.93 : R, a = i * Math.PI / teeth;
+      ctx[i ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+    }
+    ctx.closePath();
+    ctx.fillStyle = pal.edge || goldGrad(ctx, cx - R, cy - R, cx + R, cy + R); ctx.fill();
+    ctx.restore();
+    // פני המדליה
+    const g = ctx.createRadialGradient(cx - R*0.3, cy - R*0.35, R*0.1, cx, cy, R*0.85);
+    g.addColorStop(0, pal.face1); g.addColorStop(1, pal.face2);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R*0.78, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = pal.ring; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, R*0.68, 0, Math.PI*2); ctx.stroke();
+    ctx.setLineDash([1.5, 4]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, R*0.6, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    // כוכב בהטבעה: צל בהיר ותחתיו כהה
+    star(ctx, cx + 1.2, cy + 1.8, 5, R*0.42, R*0.18); ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fill();
+    star(ctx, cx, cy + 1, 5, R*0.42, R*0.18); ctx.fillStyle = pal.star; ctx.fill();
+    // ברק
+    ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(cx, cy, R*0.72, Math.PI*1.12, Math.PI*1.42); ctx.stroke();
+  }
+
+  // ---------- טקסט ----------
+  function fitFont(ctx, tpl, text, start, min, maxW){
+    let px = start;
+    ctx.font = font(tpl, px);
+    while (px > min && ctx.measureText(text).width > maxW){ px -= 2; ctx.font = font(tpl, px); }
+    return px;
+  }
+  function wrap(ctx, text, maxW){
+    const words = text.split(/\s+/).filter(Boolean), lines = [];
+    let cur = '';
+    words.forEach(w => {
+      const test = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(test).width <= maxW || !cur) cur = test; else { lines.push(cur); cur = w; }
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function divider(ctx, y, color, width){
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(W/2 - width, y); ctx.lineTo(W/2 - 14, y); ctx.moveTo(W/2 + 14, y); ctx.lineTo(W/2 + width, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(W/2, y - 6); ctx.lineTo(W/2 + 7, y); ctx.lineTo(W/2, y + 6); ctx.lineTo(W/2 - 7, y); ctx.closePath(); ctx.fill();
+  }
+
+  function draw(cv, pxW, pxH, d){
+    const ctx = cv.getContext('2d');
+    const k = pxW / W;
+    try { ctx.direction = 'rtl'; } catch(_){}
+    ctx.setTransform(k, 0, 0, pxH / H, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const t = THEMES[d.theme] || THEMES.gold;
+    const cx = d.theme === 'modern' ? (W - 76) / 2 + 4 : W / 2;
+    if (d.theme === 'modern') frameModern(ctx); else if (d.theme === 'festive') frameFestive(ctx); else frameGold(ctx);
+
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    const maxW = d.theme === 'modern' ? 820 : 860;
+
+    // כותרת
+    const title = d.title || 'תעודת הוקרה';
+    const tpx = fitFont(ctx, t.title, title, 70, 36, maxW);
+    if (d.theme === 'gold'){ ctx.fillStyle = goldGrad(ctx, cx - 300, 120, cx + 300, 190); }
+    else if (d.theme === 'festive'){
+      const g = ctx.createLinearGradient(cx - 280, 0, cx + 280, 0);
+      g.addColorStop(0, '#7b61ff'); g.addColorStop(.5, '#e63e6d'); g.addColorStop(1, '#ff9f1c');
+      ctx.fillStyle = g;
+    } else ctx.fillStyle = t.navy;
+    ctx.save();
+    if (d.theme === 'gold'){ ctx.shadowColor = 'rgba(90,60,10,.25)'; ctx.shadowOffsetY = 1.5 * k; ctx.shadowBlur = 2 * k; }
+    ctx.fillText(title, cx, 165 + (70 - tpx) * 0.3);
+    ctx.restore();
+
+    if (d.theme === 'gold') divider(ctx, 204, '#b8892b', 170);
+    else if (d.theme === 'modern'){ ctx.fillStyle = t.accent; ctx.fillRect(cx - 40, 196, 80, 4); }
+    else { [-36, -12, 12, 36].forEach((o, i) => { ctx.fillStyle = THEMES.festive.colors[i+1]; ctx.beginPath(); ctx.arc(cx + o, 202, 5, 0, Math.PI*2); ctx.fill(); }); }
+
+    // מוענקת ל
+    ctx.fillStyle = t.soft; ctx.font = font(t.text, 25);
+    ctx.fillText('מוענקת בזאת בהערכה רבה ל:', cx, 258);
+
+    // שם
+    const name = d.name || ' ';
+    const npx = fitFont(ctx, t.name, name, 74, 36, maxW - 60);
+    ctx.fillStyle = d.theme === 'festive' ? '#2b2140' : t.ink;
+    ctx.fillText(name, cx, 338);
+    const nw = Math.min(Math.max(ctx.measureText(name).width + 90, 320), maxW);
+    ctx.strokeStyle = d.theme === 'gold' ? '#c49a3a' : d.theme === 'modern' ? '#d9e2ea' : '#ffc233';
+    ctx.lineWidth = d.theme === 'festive' ? 3 : 1.6;
+    ctx.beginPath(); ctx.moveTo(cx - nw/2, 360); ctx.lineTo(cx + nw/2, 360); ctx.stroke();
+
+    // נוסח ההישג
+    const ach = d.achievement ? 'על: ' + d.achievement : '';
+    let apx = 26, lines;
+    for (;;){
+      ctx.font = font(t.text, apx);
+      lines = wrap(ctx, ach, maxW - 40);
+      if (lines.length <= 3 || apx <= 17) break;
+      apx -= 1;
+    }
+    lines = lines.slice(0, 3);
+    ctx.fillStyle = t.ink;
+    const lh = apx * 1.5;
+    lines.forEach((ln, i) => ctx.fillText(ln, cx, 408 + i * lh));
+
+    // מדליה, תאריך וחתימה
+    const my = 628;
+    medal(ctx, cx, my, d.theme === 'modern' ? 52 : 58, d.theme, k);
+
+    const lineCol = d.theme === 'gold' ? '#a77d22' : d.theme === 'modern' ? '#9fb3c2' : '#7b61ff';
+    const block = (x, top, bottom) => {
+      ctx.fillStyle = t.ink; ctx.font = font(t.sign, 26);
+      const tw = fitFont(ctx, t.sign, top || ' ', 26, 16, 230);
+      ctx.fillText(top || '', x, 676);
+      ctx.strokeStyle = lineCol; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(x - 120, 692); ctx.lineTo(x + 120, 692); ctx.stroke();
+      ctx.fillStyle = t.soft; fitFont(ctx, t.text, bottom, 19, 13, 250);
+      ctx.fillText(bottom, x, 720);
+      return tw;
+    };
+    const off = d.theme === 'modern' ? 285 : 295;
+    block(cx + off, hebDate(d.date), 'תאריך');
+    block(cx - off, d.signer, d.role ? 'חתימה · ' + d.role : 'חתימה');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  // ---------- תצוגה מקדימה ----------
+  let state = load();
+  function render(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(300, Math.round(canvas.clientWidth * dpr));
+    const h = Math.round(w * H / W);
+    if (canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; }
+    draw(canvas, w, h, state);
+    canvas.setAttribute('aria-label', 'תעודה: ' + (state.title || '') + ' ל' + (state.name || ''));
+  }
+  form.addEventListener('input', () => { state = read(); save(state); render(); msg.textContent = ''; });
+  form.addEventListener('change', () => { state = read(); save(state); render(); });
+  form.addEventListener('submit', e => e.preventDefault());
+  if ('ResizeObserver' in window) new ResizeObserver(() => render()).observe(canvas);
+  else window.addEventListener('resize', render);
+
+  // ---------- ייצוא ----------
+  function hiRes(){
+    const c = document.createElement('canvas');
+    c.width = PRINT_W; c.height = PRINT_H; c.setAttribute('dir', 'rtl');
+    draw(c, PRINT_W, PRINT_H, state);
+    return c;
+  }
+  const safeName = s => (s || 'תעודה').replace(/[\\/:*?"<>|]+/g, '').trim() || 'תעודה';
+
+  document.getElementById('download').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    btn.disabled = true; msg.textContent = 'מכינים תמונה באיכות הדפסה...';
+    setTimeout(() => {
+      const c = hiRes();
+      const fname = 'תעודה - ' + safeName(state.name) + '.png';
+      const finish = url => {
+        const a = document.createElement('a');
+        a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+        btn.disabled = false; msg.textContent = 'התמונה נשמרה בתיקיית ההורדות (' + PRINT_W + '×' + PRINT_H + ' פיקסלים).';
+        if (url.startsWith('blob:')) setTimeout(() => URL.revokeObjectURL(url), 4000);
+      };
+      if (c.toBlob) c.toBlob(b => finish(b ? URL.createObjectURL(b) : c.toDataURL('image/png')), 'image/png');
+      else finish(c.toDataURL('image/png'));
+    }, 30);
+  });
+
+  const printImg = document.getElementById('printImg');
+  document.getElementById('print').addEventListener('click', () => {
+    msg.textContent = 'מכינים להדפסה...';
+    printImg.src = hiRes().toDataURL('image/png');
+    const go = () => { msg.textContent = 'בחלון ההדפסה בחרו דף A4 לרוחב, ובטלו כותרות עליונות ותחתונות אם הן מופיעות.'; window.print(); };
+    if (printImg.decode) printImg.decode().then(go, go); else printImg.onload = go;
+  });
+
+  // ---------- איפוס עם אישור בתוך הדף ----------
+  const ask = document.getElementById('resetAsk'), conf = document.getElementById('resetConfirm');
+  ask.addEventListener('click', () => { ask.hidden = true; conf.hidden = false; document.getElementById('resetNo').focus(); });
+  document.getElementById('resetNo').addEventListener('click', () => { conf.hidden = true; ask.hidden = false; ask.focus(); });
+  document.getElementById('resetYes').addEventListener('click', () => {
+    state = Object.assign({}, SAMPLE); fill(state); save(state); render();
+    conf.hidden = true; ask.hidden = false; msg.textContent = 'חזרנו לתעודה לדוגמה.';
+  });
+
+  // ---------- הפעלה ----------
+  fill(state); render();
+  const fontsToLoad = ['900 40px "Frank Ruhl Libre"', '700 40px "Frank Ruhl Libre"', '400 40px "Frank Ruhl Libre"',
+    '400 40px "Heebo"', '700 40px "Heebo"', '800 40px "Heebo"', '400 40px "Varela Round"'];
+  if (document.fonts && document.fonts.load){
+    Promise.all(fontsToLoad.map(f => document.fonts.load(f, 'אבגד').catch(() => null))).then(render, render);
+    document.fonts.ready.then(render);
+  }
+})();
+</script>
+</body>
+</html>
